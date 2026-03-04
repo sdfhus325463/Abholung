@@ -40,7 +40,6 @@
     </div>
 
     <form class="form-body" id="pickupForm">
-        
         <div class="section">
             <div class="section-title">1. Absender & Kontakt</div>
             <div class="grid">
@@ -126,14 +125,17 @@
     const pickupForm = document.getElementById('pickupForm');
     const submitBtn = document.getElementById('submitBtn');
 
+    // Mindestdatum auf morgen setzen
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     dateField.min = tomorrow.toISOString().split("T")[0];
 
+    // Funktion zum Erstellen der Packstück-Eingabemasken
     function renderPackages() {
         let count = parseInt(selector.value);
         if (isNaN(count) || count < 1) count = 1;
         if (count > 15) count = 15;
+        
         container.innerHTML = '';
         for (let i = 1; i <= count; i++) {
             const card = document.createElement('div');
@@ -163,9 +165,11 @@
         }
     }
 
+    // Listener für die Änderung der Packstück-Anzahl
     selector.addEventListener('input', renderPackages);
-    renderPackages(); // Initiales Rendering beim Laden
+    renderPackages(); // Initial beim Laden ausführen
 
+    // Sendevorgang
     pickupForm.addEventListener('submit', function(e) {
         e.preventDefault(); 
         submitBtn.disabled = true;
@@ -177,15 +181,13 @@
             method: 'POST', 
             body: formData
         })
-        .then(response => {
+        .then(() => {
             window.location.href = DANKE_SEITE_URL;
         })
-        .catch(error => {
-            console.log("Fehler beim Senden, leite trotzdem weiter...");
+        .catch(() => {
             window.location.href = DANKE_SEITE_URL;
         });
     });
 </script>
-
 </body>
 </html>
