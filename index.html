@@ -28,7 +28,7 @@
         .footer-note { background: #fdf2f2; padding: 15px; border-radius: 6px; margin-top: 20px; font-size: 0.9em; border: 1px solid #fbd5d5; }
         button { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; transition: 0.2s; }
         button:hover { background: #003d82; transform: translateY(-1px); }
-        button:disabled { background: #ccc; cursor: not-allowed; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -130,7 +130,7 @@
     tomorrow.setDate(tomorrow.getDate() + 1);
     dateField.min = tomorrow.toISOString().split("T")[0];
 
-    // Funktion zum Erstellen der Packstück-Eingabemasken
+    // Kernfunktion: Erstellt die Eingabefelder für Packstücke
     function renderPackages() {
         let count = parseInt(selector.value);
         if (isNaN(count) || count < 1) count = 1;
@@ -165,11 +165,11 @@
         }
     }
 
-    // Listener für die Änderung der Packstück-Anzahl
+    // Listener für Änderungen und Initialisierung
     selector.addEventListener('input', renderPackages);
-    renderPackages(); // Initial beim Laden ausführen
+    window.addEventListener('DOMContentLoaded', renderPackages);
 
-    // Sendevorgang
+    // Formular-Versand Logik
     pickupForm.addEventListener('submit', function(e) {
         e.preventDefault(); 
         submitBtn.disabled = true;
@@ -185,6 +185,7 @@
             window.location.href = DANKE_SEITE_URL;
         })
         .catch(() => {
+            // Falls CORS blockiert, aber Daten ankamen, trotzdem weiterleiten
             window.location.href = DANKE_SEITE_URL;
         });
     });
