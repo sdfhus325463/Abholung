@@ -117,7 +117,6 @@
 </div>
 
 <script>
-    // Konfiguration - DEINE GOOGLE URL HIER EINTRAGEN
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwMqJAoFnmqGIK3FzDc6OawOjARZgqn0eZbo14yPO494c8cVYVL3Ot6Z8upmsyShMp1/exec";
     const DANKE_SEITE_URL = "https://sdfhus325463.github.io/Abholung/danke.html";
 
@@ -127,7 +126,6 @@
     const pickupForm = document.getElementById('pickupForm');
     const submitBtn = document.getElementById('submitBtn');
 
-    // Mindestdatum auf morgen setzen
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     dateField.min = tomorrow.toISOString().split("T")[0];
@@ -166,41 +164,28 @@
     }
 
     selector.addEventListener('input', renderPackages);
-    renderPackages();
+    renderPackages(); // Initiales Rendering beim Laden
 
-    // Sendevorgang per JavaScript
     pickupForm.addEventListener('submit', function(e) {
         e.preventDefault(); 
-        
         submitBtn.disabled = true;
         submitBtn.innerText = "Wird gesendet...";
         
         const formData = new FormData(pickupForm);
 
-        // Sendevorgang per JavaScript
-    pickupForm.addEventListener('submit', function(e) {
-        e.preventDefault(); 
-        
-        submitBtn.disabled = true;
-        submitBtn.innerText = "Wird gesendet...";
-        
-        const formData = new FormData(pickupForm);
-
-        // Wir nutzen hier 'method: POST' und lassen 'no-cors' weg, 
-        // da das neue Skript JSON zurückgibt.
         fetch(GOOGLE_SCRIPT_URL, { 
             method: 'POST', 
             body: formData
         })
         .then(response => {
-            // Egal ob Erfolg oder technischer CORS-Fehler, 
-            // wenn die Daten in der Tabelle sind, leiten wir weiter.
             window.location.href = DANKE_SEITE_URL;
         })
         .catch(error => {
-            // Falls es komplett scheitert, leiten wir trotzdem weiter, 
-            // da Sie sagten, die Daten kommen ja an.
-            console.log("Hinweis: Weiterleitung erzwungen.");
+            console.log("Fehler beim Senden, leite trotzdem weiter...");
             window.location.href = DANKE_SEITE_URL;
         });
     });
+</script>
+
+</body>
+</html>
