@@ -13,28 +13,22 @@
         .form-body { padding: 30px; }
         .section { margin-bottom: 35px; border-left: 4px solid var(--primary); padding-left: 20px; }
         .section-title { font-weight: 700; font-size: 1.1em; margin-bottom: 15px; color: var(--primary); text-transform: uppercase; }
-        
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .full { grid-column: span 2; }
-        
         label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85em; color: #555; }
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; font-family: inherit; box-sizing: border-box; }
         input:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(0,86,179,0.1); }
-
         .compano-warning { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text); padding: 15px; border-radius: 6px; margin: 15px 0; }
         .compano-warning strong { display: block; margin-bottom: 5px; font-size: 1em; }
-
         .count-selector { background: #e7f3ff; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--primary); }
         .count-input { font-size: 1.2em; font-weight: bold; color: var(--primary); border: 2px solid var(--primary); width: 100px !important; }
-
         .package-card { background: #f8f9fa; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; margin-bottom: 15px; animation: fadeIn 0.3s ease; }
         .package-header { font-weight: bold; margin-bottom: 15px; color: var(--primary); border-bottom: 1px solid #ddd; padding-bottom: 5px; }
         .dimensions { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
-
         .footer-note { background: #fdf2f2; padding: 15px; border-radius: 6px; margin-top: 20px; font-size: 0.9em; border: 1px solid #fbd5d5; }
         button { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; transition: 0.2s; }
         button:hover { background: #003d82; transform: translateY(-1px); }
-
+        button:disabled { background: #ccc; cursor: not-allowed; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -45,8 +39,7 @@
         <h2>OMICRON Pick-up Service</h2>
     </div>
 
-    <form action="https://script.google.com/macros/s/AKfycbwMqJAoFnmqGIK3FzDc6OawOjARZgqn0eZbo14yPO494c8cVYVL3Ot6Z8upmsyShMp1/exec" method="POST" class="form-body" id="pickupForm">
-    <input type="hidden" name="_next" value="https://github.com/sdfhus325463/Abholung/danke.html">
+    <form class="form-body" id="pickupForm">
         
         <div class="section">
             <div class="section-title">1. Absender & Kontakt</div>
@@ -55,7 +48,6 @@
                 <div><label>Ansprechpartner für Abholung *</label><input type="text" name="Kontaktperson" required></div>
                 <div><label>Telefonnummer *</label><input type="tel" name="Telefon" required></div>
                 <div class="full"><label>E-Mail Adresse für Zusendung der Dokumente *</label><input type="email" name="Absender_Email" required></div>
-                
                 <div><label>Herkunftsland *</label><input type="text" name="Land" placeholder="z.B. Österreich" required></div>
                 <div><label>Ort *</label><input type="text" name="Ort" required></div>
                 <div><label>Postleitzahl (PLZ) *</label><input type="text" name="PLZ" required></div>
@@ -70,12 +62,10 @@
                     <label>Welche(s) Gerät(e) werden zurückgeschickt? (Modell & Zubehör) *</label>
                     <textarea name="Geraete_Liste" rows="4" placeholder="z.B. 1x CMC 356, 2x Testkabel-Set..." required></textarea>
                 </div>
-
                 <div class="full compano-warning">
                     <strong>⚠️ Wichtiger Sicherheitshinweis</strong>
                     Bei Rücksendung eines <b>COMPANO 100</b>: Bitte das Gerät nach Möglichkeit <b>ohne Batterie</b> versenden, um zusätzliche Gefahrgut-Auflagen zu vermeiden!
                 </div>
-
                 <div class="full">
                     <label>Seriennummer(n) *</label>
                     <input type="text" name="Seriennummern" placeholder="z.B. 12345678" required>
@@ -122,14 +112,20 @@
             </label>
         </div>
 
-        <button type="submit">Abholauftrag jetzt senden</button>
+        <button type="submit" id="submitBtn">Abholauftrag jetzt senden</button>
     </form>
 </div>
 
 <script>
+    // Konfiguration - DEINE GOOGLE URL HIER EINTRAGEN
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwMqJAoFnmqGIK3FzDc6OawOjARZgqn0eZbo14yPO494c8cVYVL3Ot6Z8upmsyShMp1/exec";
+    const DANKE_SEITE_URL = "https://sdfhus325463.github.io/Abholung/danke.html";
+
     const container = document.getElementById('packageContainer');
     const selector = document.getElementById('packageCount');
     const dateField = document.getElementById('pickupDate');
+    const pickupForm = document.getElementById('pickupForm');
+    const submitBtn = document.getElementById('submitBtn');
 
     // Mindestdatum auf morgen setzen
     const tomorrow = new Date();
@@ -140,9 +136,7 @@
         let count = parseInt(selector.value);
         if (isNaN(count) || count < 1) count = 1;
         if (count > 15) count = 15;
-
         container.innerHTML = '';
-
         for (let i = 1; i <= count; i++) {
             const card = document.createElement('div');
             card.className = 'package-card';
@@ -173,9 +167,32 @@
 
     selector.addEventListener('input', renderPackages);
     renderPackages();
+
+    // Sendevorgang per JavaScript
+    pickupForm.addEventListener('submit', function(e) {
+        e.preventDefault(); 
+        
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Wird gesendet...";
+        
+        const formData = new FormData(pickupForm);
+
+        fetch(GOOGLE_SCRIPT_URL, { 
+            method: 'POST', 
+            body: formData,
+            mode: 'no-cors' 
+        })
+        .then(() => {
+            window.location.href = DANKE_SEITE_URL;
+        })
+        .catch(error => {
+            console.error('Fehler!', error.message);
+            alert("Es gab einen Fehler. Bitte versuchen Sie es erneut.");
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Abholauftrag jetzt senden";
+        });
+    });
 </script>
 
 </body>
-
 </html>
-
