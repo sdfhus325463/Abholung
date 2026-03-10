@@ -91,7 +91,7 @@
     const selector = document.getElementById('packageCount');
     const pickupForm = document.getElementById('pickupForm');
 
-    // Angepasste Logik: Höhe (H) bleibt bei Koffer/Paletten zur manuellen Eingabe leer
+    // Korrigierte Logik: Beim Koffer bleibt jetzt alles leer
     function updateDimensions(selectElement, index) {
         const card = selectElement.closest('.package-card');
         const lInput = card.querySelector(`input[name="P${index}_L"]`);
@@ -100,13 +100,13 @@
 
         switch(selectElement.value) {
             case "Original Omicron Koffer":
-                lInput.value = ""; bInput.value = ""; hInput.value = ""; // Höhe manuell
+                lInput.value = ""; bInput.value = ""; hInput.value = ""; // ALLES LEER
                 break;
             case "Euro Palette (120x80)":
-                lInput.value = 120; bInput.value = 80; hInput.value = ""; // Höhe manuell
+                lInput.value = 120; bInput.value = 80; hInput.value = ""; // Grundmaß fix
                 break;
             case "Kleine Palette (60x80)":
-                lInput.value = 80; bInput.value = 60; hInput.value = ""; // Höhe manuell
+                lInput.value = 80; bInput.value = 60; hInput.value = ""; // Grundmaß fix
                 break;
             default:
                 lInput.value = ""; bInput.value = ""; hInput.value = "";
@@ -151,7 +151,6 @@
         btn.innerText = "Wird übertragen...";
 
         const formData = new FormData(pickupForm);
-        // Deine URL
         const ACTION_URL = "https://script.google.com/macros/s/AKfycbz34Tfa1a0jpe2-qtF1lt8Qy42cY9HurHQ9JPp8zVgAji7GFZ3yVCYLwymxjOaoCbwYKQ/exec";
 
         fetch(ACTION_URL, {
