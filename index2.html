@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OMICRON Pick-up Service | Professional Portal</title>
     <style>
+        /* DEIN BESTEHENDER STYLE - UNVERÄNDERT */
         :root { --primary: #0056b3; --bg: #f4f7f9; --card: #ffffff; --warn-bg: #fff3cd; --warn-border: #ffeeba; --warn-text: #856404; }
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); padding: 20px; color: #333; line-height: 1.5; }
         .container { max-width: 850px; margin: 0 auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; }
@@ -28,7 +29,6 @@
         .footer-note { background: #fdf2f2; padding: 15px; border-radius: 6px; margin-top: 20px; font-size: 0.9em; border: 1px solid #fbd5d5; }
         button { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; transition: 0.2s; }
         button:hover { background: #003d82; transform: translateY(-1px); }
-        button:disabled { opacity: 0.6; cursor: not-allowed; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="full compano-warning">
                     <strong>⚠️ Wichtiger Sicherheitshinweis</strong>
-                    Bei Rücksendung eines <b>COMPANO 100</b>: Bitte das Gerät nach Möglichkeit <b>ohne Batterie</b> versenden, um zusätzliche Gefahrgut-Auflagen zu vermeiden!
+                    Bei Rücksendung eines <b>COMPANO 100</b>: Bitte das Gerät nach Möglichkeit <b>ohne Batterie</b> versenden!
                 </div>
                 <div class="full">
                     <label>Seriennummer(n) *</label>
@@ -71,7 +71,7 @@
                 </div>
                 <div class="full">
                     <label>Grund der Rücksendung *</label>
-                    <textarea name="Service_Grund" rows="3" placeholder="Grund (z.B. Defekt, Kalibrierung, Upgrade...)" required></textarea>
+                    <textarea name="Service_Grund" rows="3" placeholder="Grund (z.B. Defekt, Kalibrierung...)" required></textarea>
                 </div>
             </div>
         </div>
@@ -107,30 +107,25 @@
         <div class="footer-note">
             <label style="display: flex; align-items: flex-start; cursor: pointer;">
                 <input type="checkbox" required style="width: auto; margin-top: 4px; margin-right: 10px;">
-                <span>Ich bestätige, dass alle Geräte transportsicher verpackt sind und der Inhalt den obigen Angaben entspricht.</span>
+                <span>Ich bestätige, dass alle Geräte transportsicher verpackt sind.</span>
             </label>
         </div>
 
-        <button type="submit" id="submitBtn">Abholauftrag jetzt senden</button>
+        <button type="submit" id="submitBtn">E-Mail Entwurf erstellen</button>
     </form>
 </div>
 
 <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby52bVmYeWw50JAOIKO5Z3uQhWsr-y1rQkvSJ-B2vga-56Gw4SDk8rpNYm9kzXh2Qy4/exec";
-    const DANKE_SEITE_URL = "https://sdfhus325463.github.io/Abholung/danke.html";
-
     const container = document.getElementById('packageContainer');
     const selector = document.getElementById('packageCount');
     const dateField = document.getElementById('pickupDate');
     const pickupForm = document.getElementById('pickupForm');
-    const submitBtn = document.getElementById('submitBtn');
 
     // Mindestdatum auf morgen setzen
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     dateField.min = tomorrow.toISOString().split("T")[0];
 
-    // Kernfunktion: Erstellt die Eingabefelder für Packstücke
     function renderPackages() {
         let count = parseInt(selector.value);
         if (isNaN(count) || count < 1) count = 1;
@@ -165,33 +160,48 @@
         }
     }
 
-    // Listener für Änderungen und Initialisierung
     selector.addEventListener('input', renderPackages);
     window.addEventListener('DOMContentLoaded', renderPackages);
 
-    // Formular-Versand Logik
+    // E-MAIL VERSAND LOGIK
     pickupForm.addEventListener('submit', function(e) {
         e.preventDefault(); 
-        submitBtn.disabled = true;
-        submitBtn.innerText = "Wird gesendet...";
         
         const formData = new FormData(pickupForm);
+        let bodyText = "NEUER ABHOLAUFTRAG (OMICRON PICK-UP SERVICE)\n";
+        bodyText += "==============================================\n\n";
+        
+        bodyText += "1. ABSENDER & KONTAKT\n";
+        bodyText += `Firma: ${formData.get('Absender_Firma')}\n`;
+        bodyText += `Kontaktperson: ${formData.get('Kontaktperson')}\n`;
+        bodyText += `Telefon: ${formData.get('Telefon')}\n`;
+        bodyText += `E-Mail: ${formData.get('Absender_Email')}\n`;
+        bodyText += `Adresse: ${formData.get('Strasse_Hnr')}, ${formData.get('PLZ')} ${formData.get('Ort')}, ${formData.get('Land')}\n\n`;
 
-        fetch(GOOGLE_SCRIPT_URL, { 
-            method: 'POST', 
-            body: formData
-        })
-        .then(() => {
-            window.location.href = DANKE_SEITE_URL;
-        })
-        .catch(() => {
-            // Falls CORS blockiert, aber Daten ankamen, trotzdem weiterleiten
-            window.location.href = DANKE_SEITE_URL;
-        });
+        bodyText += "2. GERÄTE-INFOS\n";
+        bodyText += `Modelle: ${formData.get('Geraete_Liste')}\n`;
+        bodyText += `Seriennummern: ${formData.get('Seriennummern')}\n`;
+        bodyText += `Servicegrund: ${formData.get('Service_Grund')}\n\n`;
+
+        bodyText += "3. PACKSTÜCKE\n";
+        const count = selector.value;
+        for (let i = 1; i <= count; i++) {
+            bodyText += `Packstück #${i}: ${formData.get('P'+i+'_Typ')} | Maße: ${formData.get('P'+i+'_L')}x${formData.get('P'+i+'_B')}x${formData.get('P'+i+'_H')} cm | Gewicht: ${formData.get('P'+i+'_Gewicht')} kg\n`;
+        }
+        bodyText += `\n`;
+
+        bodyText += "4. TERMINIERUNG\n";
+        bodyText += `Wunschdatum: ${formData.get('Abholdatum')}\n`;
+        bodyText += `Zeitfenster: ${formData.get('Zeitfenster')}\n`;
+        bodyText += `Zusatzinfos: ${formData.get('Zusatzinfo_Logistik')}\n`;
+
+        // E-Mail Link generieren
+        const subject = encodeURIComponent(`Abholauftrag: ${formData.get('Absender_Firma')} - ${formData.get('Seriennummern')}`);
+        const mailtoLink = `mailto:christian.schoerghofer@omicronenergy.com?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
+
+        // Öffnet das Standard-E-Mail Programm
+        window.location.href = mailtoLink;
     });
 </script>
 </body>
 </html>
-
-
-
