@@ -5,61 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OMICRON Pick-up Service | Professional Portal</title>
     <style>
-        :root { --primary: #0056b3; --bg: #f4f7f9; --card: #ffffff; --warn-bg: #fff3cd; --warn-border: #ffeeba; --warn-text: #856404; --success: #28a745; }
-        body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); padding: 20px; color: #333; line-height: 1.5; margin: 0; }
-        
-        /* Google Translate Styling */
-        #google_translate_element {
-            text-align: right;
-            padding: 10px 20px;
-            background: #ebeef1;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 20px;
+        :root { 
+            --primary: #0056b3; 
+            --primary-dark: #003d82;
+            --bg: #f4f7f9; 
+            --card: #ffffff; 
+            --success: #28a745; 
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-        .goog-te-gadget span { display: none !important; } 
-        .goog-te-gadget { font-size: 0.85em !important; color: #666 !important; }
+        
+        body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); padding: 0; margin: 0; color: #333; line-height: 1.5; }
 
-        .container { max-width: 850px; margin: 0 auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; position: relative; min-height: 400px; }
-        .header { background: var(--primary); color: white; padding: 25px; text-align: center; }
+        /* Modernes Language Panel */
+        .language-bar {
+            background: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--shadow);
+            border-bottom: 2px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .language-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 850px;
+            width: 100%;
+            justify-content: flex-end;
+        }
+
+        .language-label {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Google Translate Widget Customizing */
+        #google_translate_element {
+            min-width: 160px;
+        }
+        
+        .goog-te-gadget {
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        .goog-te-gadget-simple {
+            background-color: #fff !important;
+            border: 1px solid #ddd !important;
+            padding: 6px 10px !important;
+            border-radius: 6px !important;
+            cursor: pointer !important;
+            display: inline-block !important;
+        }
+
+        .goog-te-menu-value span {
+            color: #333 !important;
+            font-size: 0.9em !important;
+        }
+
+        /* Verstecke unnötige Google-Elemente */
+        .goog-te-banner-frame.skiptranslate, .goog-te-gadget span, img.goog-te-gadget-icon {
+            display: none !important;
+        }
+        body { top: 0px !important; }
+
+        /* Container & Form Styles */
+        .container { max-width: 850px; margin: 40px auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
+        .header { background: var(--primary); color: white; padding: 30px; text-align: center; }
         .header h2 { margin: 0; font-size: 1.8em; letter-spacing: 1px; font-weight: 700; }
-        .form-body { padding: 30px; }
-        .section { margin-bottom: 35px; border-left: 4px solid var(--primary); padding-left: 20px; }
+        
+        .form-body { padding: 35px; }
+        .section { margin-bottom: 40px; border-left: 4px solid var(--primary); padding-left: 20px; }
         .section-title { font-weight: 700; font-size: 1.1em; margin-bottom: 20px; color: var(--primary); text-transform: uppercase; }
+        
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .full { grid-column: span 2; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9em; color: #444; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; font-family: inherit; transition: border 0.2s; }
         
-        .count-selector { background: #e7f3ff; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--primary); }
-        .count-input { font-size: 1.2em; font-weight: bold; color: var(--primary); border: 2px solid var(--primary); width: 100px !important; text-align: center; }
-        .package-card { background: #f8f9fa; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; margin-bottom: 15px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9em; color: #444; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; font-family: inherit; }
+        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(0,86,179,0.1); }
+
+        .count-selector { background: #e7f3ff; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: space-between; }
+        .count-input { font-size: 1.2em; font-weight: bold; color: var(--primary); border: 2px solid var(--primary); width: 80px !important; text-align: center; }
+        
+        .package-card { background: #f8f9fa; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-top: 3px solid #ddd; }
         .dimensions { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
         
-        button#submitBtn { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; transition: 0.3s; }
-        button#submitBtn:hover { background: #003d82; }
+        button#submitBtn { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; transition: background 0.3s; }
+        button#submitBtn:hover { background: var(--primary-dark); }
 
-        #success-overlay { 
-            display: none; 
-            padding: 60px 30px; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            text-align: center; 
-        }
+        #success-overlay { display: none; padding: 60px 30px; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         .success-icon { font-size: 60px; color: var(--success); margin-bottom: 20px; }
-        #success-overlay h1 { color: var(--primary); margin-bottom: 15px; }
         .btn-reload { display: inline-block; margin-top: 30px; padding: 15px 30px; background: var(--primary); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="google_translate_element"></div>
+<div class="language-bar">
+    <div class="language-content">
+        <span class="language-label">
+            <i>🌐</i> Language / Sprache:
+        </span>
+        <div id="google_translate_element"></div>
+    </div>
+</div>
 
 <div class="container">
     <div id="success-overlay">
         <div class="success-icon">✓</div>
-        <h1>Vielen Dank!</h1>
-        <p>Ihr Abholauftrag wurde erfolgreich übermittelt. Wir prüfen die Daten und senden Ihnen die Versanddokumente an die angegebene E-Mail-Adresse.</p>
+        <h1>Vielen Dank! / Thank you!</h1>
+        <p>Ihr Abholauftrag wurde erfolgreich übermittelt. / Your pickup order has been submitted successfully.</p>
         <button onclick="location.reload()" class="btn-reload">Neuer Auftrag / New Order</button>
     </div>
 
@@ -88,19 +152,14 @@
                     <label>Modelle & Zubehör *</label>
                     <textarea name="Geraete_Liste" rows="3" placeholder="z.B. CMC 500 - Testing Cable" required></textarea>
                 </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label>Seriennummer(n) *</label>
-                    <input type="text" name="Seriennummern" placeholder="z.B. 12345678" required>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label>Servicegrund *</label>
-                    <input type="text" name="Service_Grund" placeholder="z.B. Reparatur, Kalibrierung, Upgrade" required>
+                <div class="grid">
+                    <div><label>Seriennummer(n) *</label><input type="text" name="Seriennummern" placeholder="z.B. 12345678" required></div>
+                    <div><label>Servicegrund *</label><input type="text" name="Service_Grund" placeholder="z.B. Reparatur, Kalibrierung" required></div>
                 </div>
             </div>
 
             <div class="count-selector">
-                <label>Wieviele Packstücke sind es insgesamt?</label>
+                <label style="margin-bottom:0;">Anzahl der Packstücke / Number of packages:</label>
                 <input type="number" id="packageCount" name="Anzahl_Packstuecke" value="1" min="1" max="15" class="count-input">
             </div>
 
@@ -151,22 +210,6 @@
         dateInput.setAttribute('min', today);
     }
 
-    function updateDimensions(selectElement, index) {
-        const card = selectElement.closest('.package-card');
-        const lInput = card.querySelector(`input[name="P${index}_L"]`);
-        const bInput = card.querySelector(`input[name="P${index}_B"]`);
-        const hInput = card.querySelector(`input[name="P${index}_H"]`);
-
-        switch(selectElement.value) {
-            case "Euro Palette (120x80)":
-                lInput.value = 120; bInput.value = 80; hInput.value = ""; break;
-            case "Kleine Palette (60x80)":
-                lInput.value = 80; bInput.value = 60; hInput.value = ""; break;
-            default:
-                lInput.value = ""; bInput.value = ""; hInput.value = "";
-        }
-    }
-
     function renderPackages() {
         let count = parseInt(selector.value) || 1;
         container.innerHTML = '';
@@ -174,14 +217,14 @@
             const card = document.createElement('div');
             card.className = 'package-card';
             card.innerHTML = `
-                <div style="font-weight:bold; margin-bottom:10px; color:#0056b3;">Packstück #${i} / Package #${i}</div>
+                <div style="font-weight:bold; margin-bottom:12px; color:var(--primary); font-size:0.9em; text-transform:uppercase;">Packstück / Package #${i}</div>
                 <div style="margin-bottom:10px;">
-                    <label>Typ des Packstücks *</label>
-                    <select name="P${i}_Typ" onchange="updateDimensions(this, ${i})" required>
+                    <label>Typ *</label>
+                    <select name="P${i}_Typ" required>
                         <option value="Paket">Paket / Box</option>
-                        <option value="Original Omicron Koffer">Original Omicron Case</option>
-                        <option value="Euro Palette (120x80)">Euro Pallet (120x80)</option>
-                        <option value="Kleine Palette (60x80)">Small Pallet (60x80)</option>
+                        <option value="Original Omicron Koffer">Original Case</option>
+                        <option value="Euro Palette">Euro Pallet (120x80)</option>
+                        <option value="Kleine Palette">Small Pallet (60x80)</option>
                     </select>
                 </div>
                 <div class="dimensions">
@@ -219,9 +262,9 @@
             successOverlay.style.display = 'flex';
             window.scrollTo(0, 0);
         }).catch(err => {
-            alert("Error sending request.");
+            alert("Error.");
             btn.disabled = false;
-            btn.innerText = "Abholauftrag verbindlich senden";
+            btn.innerText = "Abholauftrag senden";
         });
     });
 </script>
