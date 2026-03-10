@@ -15,15 +15,14 @@
         .section-title { font-weight: 700; font-size: 1.1em; margin-bottom: 15px; color: var(--primary); text-transform: uppercase; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .full { grid-column: span 2; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85em; color: #555; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9em; color: #444; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; font-family: inherit; }
         .count-selector { background: #e7f3ff; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--primary); }
         .count-input { font-size: 1.2em; font-weight: bold; color: var(--primary); border: 2px solid var(--primary); width: 100px !important; }
         .package-card { background: #f8f9fa; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; margin-bottom: 15px; }
         .dimensions { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
         button { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; }
         
-        /* Erfolgsmeldung Overlay */
         #success-overlay {
             display: none;
             position: absolute;
@@ -69,15 +68,24 @@
 
         <div class="section">
             <div class="section-title">2. Geräte-Infos</div>
-            <textarea name="Geraete_Liste" rows="3" placeholder="Modelle & Zubehör..." required></textarea>
-            <div style="margin-top:15px;">
+            <div style="margin-bottom: 20px;">
+                <label>Modelle & Zubehör *</label>
+                <textarea name="Geraete_Liste" rows="3" placeholder="z.B. CMC 356, Testkabel-Set..." required></textarea>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
                 <label>Seriennummer(n) *</label>
-                <input type="text" name="Seriennummern" required>
+                <input type="text" name="Seriennummern" placeholder="z.B. 23784720, 28365782" required>
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <label>Servicegrund *</label>
+                <input type="text" name="Service_Grund" placeholder="z.B. Kalibrierung, Reparatur, Upgrade..." required>
             </div>
         </div>
 
         <div class="count-selector">
-            <label>Anzahl Packstücke</label>
+            <label>Wieviele Packstücke (Pakete/Paletten) sind es insgesamt?</label>
             <input type="number" id="packageCount" name="Anzahl_Packstuecke" value="1" min="1" max="15" class="count-input">
         </div>
 
@@ -89,8 +97,12 @@
         <div class="section">
             <div class="section-title">4. Terminierung</div>
             <div class="grid">
-                <div><label>Wunschdatum *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
-                <div><label>Zeitfenster</label><input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 15:00"></div>
+                <div><label>Wunschdatum der Abholung *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
+                <div><label>Abholzeitraum / Öffnungszeiten</label><input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 15:00"></div>
+                <div class="full">
+                    <label>Zusätzliche Logistik-Infos</label>
+                    <textarea name="Zusatzinfo_Logistik" rows="2" placeholder="Besonderheiten für den Fahrer..."></textarea>
+                </div>
             </div>
         </div>
 
@@ -99,7 +111,6 @@
 </div>
 
 <script>
-    // DEINE LOGIK FÜR DYNAMISCHE FELDER (BLEIBT BESTEHEN)
     const container = document.getElementById('packageContainer');
     const selector = document.getElementById('packageCount');
     const pickupForm = document.getElementById('pickupForm');
@@ -111,12 +122,12 @@
             const card = document.createElement('div');
             card.className = 'package-card';
             card.innerHTML = `
-                <div style="font-weight:bold; margin-bottom:10px;">Packstück #${i}</div>
+                <div style="font-weight:bold; margin-bottom:10px; color:#0056b3;">Packstück #${i}</div>
                 <div class="dimensions">
-                    <input type="number" name="P${i}_L" placeholder="L (cm)" required>
-                    <input type="number" name="P${i}_B" placeholder="B (cm)" required>
-                    <input type="number" name="P${i}_H" placeholder="H (cm)" required>
-                    <input type="number" name="P${i}_KG" placeholder="KG" required>
+                    <div><label>L (cm)</label><input type="number" name="P${i}_L" required min="1"></div>
+                    <div><label>B (cm)</label><input type="number" name="P${i}_B" required min="1"></div>
+                    <div><label>H (cm)</label><input type="number" name="P${i}_H" required min="1"></div>
+                    <div><label>KG</label><input type="number" name="P${i}_Gewicht" step="0.1" required min="0.1"></div>
                 </div>
             `;
             container.appendChild(card);
@@ -125,7 +136,6 @@
     selector.addEventListener('input', renderPackages);
     window.addEventListener('DOMContentLoaded', renderPackages);
 
-    // NEUE VERSAND-LOGIK (HINTERGRUND)
     pickupForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const btn = document.getElementById('submitBtn');
@@ -133,21 +143,19 @@
         btn.innerText = "Wird sicher übertragen...";
 
         const formData = new FormData(pickupForm);
-        
-        // HIER die URL deines Google Scripts oder Form-Dienstes eintragen
         const ACTION_URL = "https://script.google.com/macros/s/AKfycby0LARmBoom7jaqZv-5qFPm4DhiiQ6Brs6RPlu3zh6l4AZ94tfkD8OvgEORrB9F8WOvtg/exec";
 
         fetch(ACTION_URL, {
             method: 'POST',
             body: formData,
-            mode: 'no-cors' // Wichtig für Google Apps Script
+            mode: 'no-cors'
         }).then(() => {
-            // Zeige Erfolgsmeldung statt E-Mail Programm
             document.getElementById('success-overlay').style.display = 'flex';
             window.scrollTo(0, 0);
         }).catch(err => {
             alert("Fehler beim Senden. Bitte prüfen Sie Ihre Internetverbindung.");
             btn.disabled = false;
+            btn.innerText = "Abholauftrag verbindlich senden";
         });
     });
 </script>
