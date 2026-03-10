@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,51 +16,81 @@
         
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); padding: 0; margin: 0; color: #333; line-height: 1.5; }
 
-        /* --- STYLES FÜR DIE ÜBERSETZUNGSFUNKTION --- */
+        /* --- MODERN LANGUAGE PANEL --- */
         .language-header {
-            background: #ffffff;
+            background: var(--primary);
             padding: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             position: sticky;
             top: 0;
-            z-index: 9999;
-            border-bottom: 2px solid var(--primary);
+            z-index: 2000;
         }
 
-        .lang-button {
-            background: var(--primary);
-            color: white;
-            padding: 10px 25px;
+        .language-button-wrapper {
+            background: white;
+            padding: 8px 20px;
             border-radius: 50px;
             display: flex;
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .language-button-wrapper:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        }
+
+        .globus-icon {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .language-text {
             font-weight: 700;
-            font-size: 0.95em;
-            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
-            border: none;
+            font-size: 0.9em;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .lang-button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 86, 179, 0.3);
+        #google_translate_element {
+            display: inline-block;
         }
 
-        /* Verstecke den Google-Balken und das Standard-Widget */
-        #google_translate_element { opacity: 0; position: absolute; width: 1px; height: 1px; overflow: hidden; }
-        .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame { display: none !important; }
+        .goog-te-gadget-simple {
+            background-color: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+        }
+
+        .goog-te-menu-value {
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .goog-te-menu-value span {
+            color: var(--primary) !important;
+            text-decoration: none !important;
+        }
+
+        .goog-te-banner-frame.skiptranslate, .goog-te-gadget img, .goog-te-gadget span {
+            display: none !important;
+        }
         body { top: 0px !important; }
-        .goog-tooltip { display: none !important; }
-        .goog-tooltip:hover { display: none !important; }
-        .goog-text-highlight { background-color: transparent !important; border: none !important; box-shadow: none !important; }
+        .skiptranslate iframe { display: none !important; }
 
-        /* --- DEINE UNVERÄNDERTE STRUKTUR --- */
+        /* --- FORM LAYOUT --- */
         .container { max-width: 850px; margin: 40px auto; background: var(--card); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; }
         .header { background: #fff; color: var(--primary); padding: 40px 30px; text-align: center; border-bottom: 1px solid #eee; }
         .header h2 { margin: 0; font-size: 2.2em; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; }
@@ -92,18 +122,19 @@
 <body>
 
 <div class="language-header">
-    <button class="lang-button" onclick="triggerGoogleTranslate()">
-        <span>🌐</span> Select Language / Sprache wählen
-    </button>
-    <div id="google_translate_element"></div>
+    <div class="language-button-wrapper" onclick="document.querySelector('.goog-te-menu-value').click();">
+        <span class="globus-icon">🌐</span>
+        <span class="language-text">Select Language / Sprache wählen</span>
+        <div id="google_translate_element"></div>
+    </div>
 </div>
 
 <div class="container">
     <div id="success-overlay">
         <div class="success-icon">✓</div>
-        <h1>Vielen Dank!</h1>
-        <p>Ihr Abholauftrag wurde erfolgreich übermittelt. Wir senden Ihnen die Versanddokumente in Kürze per E-Mail.</p>
-        <button onclick="location.reload()" style="background:var(--primary); color:white; border:none; padding:15px 30px; border-radius:8px; cursor:pointer; font-weight:bold;">Neuer Auftrag</button>
+        <h1>Thank You!</h1>
+        <p>Your pickup order has been successfully submitted. We will send the shipping documents to you via email shortly.</p>
+        <button onclick="location.reload()" style="background:var(--primary); color:white; border:none; padding:15px 30px; border-radius:8px; cursor:pointer; font-weight:bold;">New Order</button>
     </div>
 
     <div id="main-content">
@@ -113,49 +144,49 @@
 
         <form class="form-body" id="pickupForm">
             <div class="section">
-                <div class="section-title">1. Absender & Kontakt</div>
+                <div class="section-title">1. Sender & Contact</div>
                 <div class="grid">
-                    <div class="full"><label>Firma *</label><input type="text" name="Absender_Firma" required></div>
-                    <div><label>Ansprechpartner *</label><input type="text" name="Kontaktperson" required></div>
-                    <div><label>Telefon *</label><input type="tel" name="Telefon" required></div>
-                    <div class="full"><label>E-Mail *</label><input type="email" name="Absender_Email" required></div>
-                    <div><label>Ort *</label><input type="text" name="Ort" required></div>
-                    <div><label>PLZ *</label><input type="text" name="PLZ" required></div>
-                    <div class="full"><label>Straße, Hausnr. *</label><input type="text" name="Strasse_Hnr" required></div>
+                    <div class="full"><label>Company *</label><input type="text" name="Absender_Firma" required></div>
+                    <div><label>Contact Person *</label><input type="text" name="Kontaktperson" required></div>
+                    <div><label>Phone *</label><input type="tel" name="Telefon" required></div>
+                    <div class="full"><label>Email *</label><input type="email" name="Absender_Email" required></div>
+                    <div><label>City *</label><input type="text" name="Ort" required></div>
+                    <div><label>Zip Code *</label><input type="text" name="PLZ" required></div>
+                    <div class="full"><label>Street, House No. *</label><input type="text" name="Strasse_Hnr" required></div>
                 </div>
             </div>
 
             <div class="section">
-                <div class="section-title">2. Geräte-Informationen</div>
+                <div class="section-title">2. Device Information</div>
                 <div style="margin-bottom: 25px;">
-                    <label>Modelle & Zubehör *</label>
-                    <textarea name="Geraete_Liste" rows="3" placeholder="z.B. CMC 356, Kabelset" required></textarea>
+                    <label>Models & Accessories *</label>
+                    <textarea name="Geraete_Liste" rows="3" placeholder="e.g. CMC 356, Cable Set" required></textarea>
                 </div>
                 <div class="grid">
-                    <div><label>Seriennummer(n) *</label><input type="text" name="Seriennummern" required></div>
-                    <div><label>Servicegrund *</label><input type="text" name="Service_Grund" placeholder="Reparatur / Kalibrierung" required></div>
+                    <div><label>Serial Number(s) *</label><input type="text" name="Seriennummern" required></div>
+                    <div><label>Reason for Service *</label><input type="text" name="Service_Grund" placeholder="Repair / Calibration" required></div>
                 </div>
             </div>
 
             <div class="count-selector">
-                <label style="margin-bottom:0; font-size:1.1em;">Anzahl der Packstücke:</label>
+                <label style="margin-bottom:0; font-size:1.1em;">Total number of packages:</label>
                 <input type="number" id="packageCount" name="Anzahl_Packstuecke" value="1" min="1" max="15" class="count-input">
             </div>
 
             <div class="section">
-                <div class="section-title">3. Details der Packstücke</div>
+                <div class="section-title">3. Package Details</div>
                 <div id="packageContainer"></div>
             </div>
 
             <div class="section">
-                <div class="section-title">4. Abholung</div>
+                <div class="section-title">4. Pickup</div>
                 <div class="grid">
-                    <div><label>Wunschdatum *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
-                    <div><label>Zeitfenster</label><input type="text" name="Zeitfenster" placeholder="z.B. 09:00 - 12:00"></div>
+                    <div><label>Requested Date *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
+                    <div><label>Time Slot</label><input type="text" name="Zeitfenster" placeholder="e.g. 09:00 AM - 12:00 PM"></div>
                 </div>
             </div>
 
-            <button type="submit" id="submitBtn">Abholauftrag jetzt senden</button>
+            <button type="submit" id="submitBtn">Submit Pickup Order Now</button>
         </form>
     </div>
 </div>
@@ -163,18 +194,11 @@
 <script type="text/javascript">
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
-            pageLanguage: 'de',
-            includedLanguages: 'en,es,pt,fr,it,nl,pl,tr,ru,zh-CN,ja,ar,hi,cs,hu,ro,sk,sv,da,fi,no,el,bg,hr,uk',
+            pageLanguage: 'en',
+            includedLanguages: 'de,en,es,pt,fr,it,nl,pl,tr,ru,zh-CN,ja,ar,hi,cs,hu,ro,sk,sv,da,fi,no,el,bg,hr,uk',
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
             autoDisplay: false
         }, 'google_translate_element');
-    }
-
-    function triggerGoogleTranslate() {
-        const el = document.querySelector('.goog-te-gadget-simple');
-        if (el) {
-            el.querySelector('span').click();
-        }
     }
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
@@ -197,20 +221,20 @@
             const card = document.createElement('div');
             card.className = 'package-card';
             card.innerHTML = `
-                <div style="font-weight:bold; margin-bottom:15px; color:var(--primary);">PACKSTÜCK #${i}</div>
+                <div style="font-weight:bold; margin-bottom:15px; color:var(--primary);">PACKAGE #${i}</div>
                 <div style="margin-bottom:15px;">
-                    <label>Verpackungstyp *</label>
+                    <label>Packaging Type *</label>
                     <select name="P${i}_Typ" required>
-                        <option value="Paket">Paket / Karton</option>
-                        <option value="Koffer">Original Koffer</option>
-                        <option value="Palette">Palette</option>
+                        <option value="Paket">Parcel / Box</option>
+                        <option value="Koffer">Original Case</option>
+                        <option value="Palette">Pallet</option>
                     </select>
                 </div>
                 <div class="dimensions">
                     <div><label>L (cm)</label><input type="number" name="P${i}_L" required></div>
-                    <div><label>B (cm)</label><input type="number" name="P${i}_B" required></div>
+                    <div><label>W (cm)</label><input type="number" name="P${i}_B" required></div>
                     <div><label>H (cm)</label><input type="number" name="P${i}_H" required></div>
-                    <div><label>Gewicht (kg)</label><input type="number" name="P${i}_Gewicht" step="0.1" required></div>
+                    <div><label>Weight (kg)</label><input type="number" name="P${i}_Gewicht" step="0.1" required></div>
                 </div>
             `;
             container.appendChild(card);
@@ -227,7 +251,7 @@
         e.preventDefault();
         const btn = document.getElementById('submitBtn');
         btn.disabled = true;
-        btn.innerText = "WIRD ÜBERMITTELT...";
+        btn.innerText = "SUBMITTING...";
 
         const formData = new FormData(pickupForm);
         fetch("https://script.google.com/macros/s/AKfycbz34Tfa1a0jpe2-qtF1lt8Qy42cY9HurHQ9JPp8zVgAji7GFZ3yVCYLwymxjOaoCbwYKQ/exec", {
@@ -239,9 +263,9 @@
             document.getElementById('success-overlay').style.display = 'flex';
             window.scrollTo(0, 0);
         }).catch(err => {
-            alert("Fehler beim Senden.");
+            alert("Error while submitting.");
             btn.disabled = false;
-            btn.innerText = "Abholauftrag jetzt senden";
+            btn.innerText = "Submit Pickup Order Now";
         });
     });
 </script>
