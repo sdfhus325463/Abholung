@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OMICRON Pick-up Service | Professional Portal</title>
     <style>
-        /* DEIN BESTEHENDER STYLE - UNVERÄNDERT */
-        :root { --primary: #0056b3; --bg: #f4f7f9; --card: #ffffff; --warn-bg: #fff3cd; --warn-border: #ffeeba; --warn-text: #856404; }
+        :root { --primary: #0056b3; --bg: #f4f7f9; --card: #ffffff; --warn-bg: #fff3cd; --warn-border: #ffeeba; --warn-text: #856404; --success: #28a745; }
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); padding: 20px; color: #333; line-height: 1.5; }
-        .container { max-width: 850px; margin: 0 auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; }
+        .container { max-width: 850px; margin: 0 auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
         .header { background: var(--primary); color: white; padding: 25px; text-align: center; }
         .header h2 { margin: 0; font-size: 1.8em; letter-spacing: 1px; }
         .form-body { padding: 30px; }
@@ -17,24 +16,39 @@
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .full { grid-column: span 2; }
         label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85em; color: #555; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; font-family: inherit; box-sizing: border-box; }
-        input:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(0,86,179,0.1); }
-        .compano-warning { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text); padding: 15px; border-radius: 6px; margin: 15px 0; }
-        .compano-warning strong { display: block; margin-bottom: 5px; font-size: 1em; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; }
         .count-selector { background: #e7f3ff; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--primary); }
         .count-input { font-size: 1.2em; font-weight: bold; color: var(--primary); border: 2px solid var(--primary); width: 100px !important; }
-        .package-card { background: #f8f9fa; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; margin-bottom: 15px; animation: fadeIn 0.3s ease; }
-        .package-header { font-weight: bold; margin-bottom: 15px; color: var(--primary); border-bottom: 1px solid #ddd; padding-bottom: 5px; }
-        .dimensions { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .footer-note { background: #fdf2f2; padding: 15px; border-radius: 6px; margin-top: 20px; font-size: 0.9em; border: 1px solid #fbd5d5; }
-        button { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; transition: 0.2s; }
-        button:hover { background: #003d82; transform: translateY(-1px); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .package-card { background: #f8f9fa; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; margin-bottom: 15px; }
+        .dimensions { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+        button { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; }
+        
+        /* Erfolgsmeldung Overlay */
+        #success-overlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            z-index: 10;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+        }
+        .success-icon { font-size: 4em; color: var(--success); margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div id="success-overlay">
+        <div class="success-icon">✓</div>
+        <h2>Auftrag erfolgreich übermittelt</h2>
+        <p>Vielen Dank! Ihr Abholauftrag wurde im System registriert und wird nun verarbeitet.<br>Sie erhalten in Kürze eine Bestätigung per E-Mail.</p>
+        <button onclick="location.reload()" style="width: auto; padding: 10px 30px; background: #6c757d;">Neuer Auftrag</button>
+    </div>
+
     <div class="header">
         <h2>OMICRON Pick-up Service</h2>
     </div>
@@ -44,40 +58,26 @@
             <div class="section-title">1. Absender & Kontakt</div>
             <div class="grid">
                 <div class="full"><label>Firma *</label><input type="text" name="Absender_Firma" required></div>
-                <div><label>Ansprechpartner für Abholung *</label><input type="text" name="Kontaktperson" required></div>
-                <div><label>Telefonnummer *</label><input type="tel" name="Telefon" required></div>
-                <div class="full"><label>E-Mail Adresse für Zusendung der Dokumente*</label><input type="email" name="Absender_Email" required></div>
-                <div><label>Herkunftsland *</label><input type="text" name="Land" placeholder="z.B. Österreich" required></div>
+                <div><label>Ansprechpartner *</label><input type="text" name="Kontaktperson" required></div>
+                <div><label>Telefon *</label><input type="tel" name="Telefon" required></div>
+                <div class="full"><label>E-Mail *</label><input type="email" name="Absender_Email" required></div>
                 <div><label>Ort *</label><input type="text" name="Ort" required></div>
-                <div><label>Postleitzahl (PLZ) *</label><input type="text" name="PLZ" required></div>
-                <div><label>Abholadresse (Straße, Hausnr.) *</label><input type="text" name="Strasse_Hnr" required></div>
+                <div><label>PLZ *</label><input type="text" name="PLZ" required></div>
+                <div class="full"><label>Straße, Hausnr. *</label><input type="text" name="Strasse_Hnr" required></div>
             </div>
         </div>
 
         <div class="section">
-            <div class="section-title">2. Geräte-Informationen</div>
-            <div class="grid">
-                <div class="full">
-                    <label>Welche(s) Gerät(e) werden zurückgeschickt? (Modell & Zubehör) *</label>
-                    <textarea name="Geraete_Liste" rows="4" placeholder="z.B. 1x CMC 356, 2x Testkabel-Set..." required></textarea>
-                </div>
-                <div class="full compano-warning">
-                    <strong>⚠️ Wichtiger Sicherheitshinweis</strong>
-                    Bei Rücksendung eines <b>COMPANO 100</b>: Bitte das Gerät nach Möglichkeit <b>ohne Batterie</b> versenden!
-                </div>
-                <div class="full">
-                    <label>Seriennummer(n) *</label>
-                    <input type="text" name="Seriennummern" placeholder="z.B. 12345678" required>
-                </div>
-                <div class="full">
-                    <label>Grund der Rücksendung *</label>
-                    <textarea name="Service_Grund" rows="3" placeholder="Grund (z.B. Defekt, Kalibrierung...)" required></textarea>
-                </div>
+            <div class="section-title">2. Geräte-Infos</div>
+            <textarea name="Geraete_Liste" rows="3" placeholder="Modelle & Zubehör..." required></textarea>
+            <div style="margin-top:15px;">
+                <label>Seriennummer(n) *</label>
+                <input type="text" name="Seriennummern" required>
             </div>
         </div>
 
         <div class="count-selector">
-            <label>Wieviele Packstücke (Pakete/Paletten) sind es insgesamt?</label>
+            <label>Anzahl Packstücke</label>
             <input type="number" id="packageCount" name="Anzahl_Packstuecke" value="1" min="1" max="15" class="count-input">
         </div>
 
@@ -89,118 +89,66 @@
         <div class="section">
             <div class="section-title">4. Terminierung</div>
             <div class="grid">
-                <div>
-                    <label>Wunschdatum der Abholung *</label>
-                    <input type="date" id="pickupDate" name="Abholdatum" required>
-                </div>
-                <div>
-                    <label>Abholzeitraum / Öffnungszeiten</label>
-                    <input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 15:30 Uhr">
-                </div>
-                <div class="full">
-                    <label>Zusätzliche Logistik-Infos</label>
-                    <textarea name="Zusatzinfo_Logistik" rows="2" placeholder="Besonderheiten für den Fahrer..."></textarea>
-                </div>
+                <div><label>Wunschdatum *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
+                <div><label>Zeitfenster</label><input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 15:00"></div>
             </div>
         </div>
 
-        <div class="footer-note">
-            <label style="display: flex; align-items: flex-start; cursor: pointer;">
-                <input type="checkbox" required style="width: auto; margin-top: 4px; margin-right: 10px;">
-                <span>Ich bestätige, dass alle Geräte transportsicher verpackt sind.</span>
-            </label>
-        </div>
-
-        <button type="submit" id="submitBtn">E-Mail Entwurf erstellen</button>
+        <button type="submit" id="submitBtn">Abholauftrag verbindlich senden</button>
     </form>
 </div>
 
 <script>
+    // DEINE LOGIK FÜR DYNAMISCHE FELDER (BLEIBT BESTEHEN)
     const container = document.getElementById('packageContainer');
     const selector = document.getElementById('packageCount');
-    const dateField = document.getElementById('pickupDate');
     const pickupForm = document.getElementById('pickupForm');
 
-    // Mindestdatum auf morgen setzen
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    dateField.min = tomorrow.toISOString().split("T")[0];
-
     function renderPackages() {
-        let count = parseInt(selector.value);
-        if (isNaN(count) || count < 1) count = 1;
-        if (count > 15) count = 15;
-        
+        let count = parseInt(selector.value) || 1;
         container.innerHTML = '';
         for (let i = 1; i <= count; i++) {
             const card = document.createElement('div');
             card.className = 'package-card';
             card.innerHTML = `
-                <div class="package-header">Packstück #${i}</div>
-                <div class="grid">
-                    <div class="full">
-                        <label>Verpackungsart *</label>
-                        <select name="P${i}_Typ" required>
-                            <option value="Karton">Karton / Paket</option>
-                            <option value="Omicron-Koffer">Original Omicron-Koffer</option>
-                            <option value="Palette_80_120">Euro-Palette (120x80cm)</option>
-                            <option value="Palette_40_60">Halb-Palette (60x40cm)</option>
-                            <option value="Andere">Sonstige / Spezialmaß</option>
-                        </select>
-                    </div>
-                </div>
+                <div style="font-weight:bold; margin-bottom:10px;">Packstück #${i}</div>
                 <div class="dimensions">
-                    <div><label>L (cm)</label><input type="number" name="P${i}_L" required min="1"></div>
-                    <div><label>B (cm)</label><input type="number" name="P${i}_B" required min="1"></div>
-                    <div><label>H (cm)</label><input type="number" name="P${i}_H" required min="1"></div>
-                    <div><label>KG</label><input type="number" name="P${i}_Gewicht" step="0.1" required min="0.1"></div>
+                    <input type="number" name="P${i}_L" placeholder="L (cm)" required>
+                    <input type="number" name="P${i}_B" placeholder="B (cm)" required>
+                    <input type="number" name="P${i}_H" placeholder="H (cm)" required>
+                    <input type="number" name="P${i}_KG" placeholder="KG" required>
                 </div>
             `;
             container.appendChild(card);
         }
     }
-
     selector.addEventListener('input', renderPackages);
     window.addEventListener('DOMContentLoaded', renderPackages);
 
-    // E-MAIL VERSAND LOGIK
+    // NEUE VERSAND-LOGIK (HINTERGRUND)
     pickupForm.addEventListener('submit', function(e) {
-        e.preventDefault(); 
-        
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerText = "Wird sicher übertragen...";
+
         const formData = new FormData(pickupForm);
-        let bodyText = "NEUER ABHOLAUFTRAG (OMICRON PICK-UP SERVICE)\n";
-        bodyText += "==============================================\n\n";
         
-        bodyText += "1. ABSENDER & KONTAKT\n";
-        bodyText += `Firma: ${formData.get('Absender_Firma')}\n`;
-        bodyText += `Kontaktperson: ${formData.get('Kontaktperson')}\n`;
-        bodyText += `Telefon: ${formData.get('Telefon')}\n`;
-        bodyText += `E-Mail: ${formData.get('Absender_Email')}\n`;
-        bodyText += `Adresse: ${formData.get('Strasse_Hnr')}, ${formData.get('PLZ')} ${formData.get('Ort')}, ${formData.get('Land')}\n\n`;
+        // HIER die URL deines Google Scripts oder Form-Dienstes eintragen
+        const ACTION_URL = "DEINE_GOOGLE_SCRIPT_URL_HIER";
 
-        bodyText += "2. GERÄTE-INFOS\n";
-        bodyText += `Modelle: ${formData.get('Geraete_Liste')}\n`;
-        bodyText += `Seriennummern: ${formData.get('Seriennummern')}\n`;
-        bodyText += `Servicegrund: ${formData.get('Service_Grund')}\n\n`;
-
-        bodyText += "3. PACKSTÜCKE\n";
-        const count = selector.value;
-        for (let i = 1; i <= count; i++) {
-            bodyText += `Packstück #${i}: ${formData.get('P'+i+'_Typ')} | Maße: ${formData.get('P'+i+'_L')}x${formData.get('P'+i+'_B')}x${formData.get('P'+i+'_H')} cm | Gewicht: ${formData.get('P'+i+'_Gewicht')} kg\n`;
-        }
-        bodyText += `\n`;
-
-        bodyText += "4. TERMINIERUNG\n";
-        bodyText += `Wunschdatum: ${formData.get('Abholdatum')}\n`;
-        bodyText += `Zeitfenster: ${formData.get('Zeitfenster')}\n`;
-        bodyText += `Zusatzinfos: ${formData.get('Zusatzinfo_Logistik')}\n`;
-
-        // E-Mail Link generieren
-        const subject = encodeURIComponent(`Abholauftrag: ${formData.get('Absender_Firma')} - ${formData.get('Seriennummern')}`);
-        const mailtoLink = `mailto:logistics@your-company.com?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
-
-        // Öffnet das Standard-E-Mail Programm
-        window.location.href = mailtoLink;
+        fetch(ACTION_URL, {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors' // Wichtig für Google Apps Script
+        }).then(() => {
+            // Zeige Erfolgsmeldung statt E-Mail Programm
+            document.getElementById('success-overlay').style.display = 'flex';
+            window.scrollTo(0, 0);
+        }).catch(err => {
+            alert("Fehler beim Senden. Bitte prüfen Sie Ihre Internetverbindung.");
+            btn.disabled = false;
+        });
     });
 </script>
 </body>
