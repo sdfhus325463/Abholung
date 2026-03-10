@@ -5,35 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OMICRON Pick-up Service | Professional Portal</title>
     <style>
+        /* Bestehender Style - Unverändert für das professionelle Look & Feel */
         :root { --primary: #0056b3; --bg: #f4f7f9; --card: #ffffff; --warn-bg: #fff3cd; --warn-border: #ffeeba; --warn-text: #856404; --success: #28a745; }
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); padding: 20px; color: #333; line-height: 1.5; }
         .container { max-width: 850px; margin: 0 auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
         .header { background: var(--primary); color: white; padding: 25px; text-align: center; }
-        .header h2 { margin: 0; font-size: 1.8em; letter-spacing: 1px; }
+        .header h2 { margin: 0; font-size: 1.8em; letter-spacing: 1px; font-weight: 700; }
         .form-body { padding: 30px; }
         .section { margin-bottom: 35px; border-left: 4px solid var(--primary); padding-left: 20px; }
-        .section-title { font-weight: 700; font-size: 1.1em; margin-bottom: 15px; color: var(--primary); text-transform: uppercase; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .section-title { font-weight: 700; font-size: 1.1em; margin-bottom: 20px; color: var(--primary); text-transform: uppercase; }
+        
+        /* Grid-System für die Anordnung */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .full { grid-column: span 2; }
+        
         label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9em; color: #444; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; font-family: inherit; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; font-family: inherit; transition: border 0.2s; }
+        input:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px rgba(0,86,179,0.1); }
+        
         .count-selector { background: #e7f3ff; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--primary); }
-        .count-input { font-size: 1.2em; font-weight: bold; color: var(--primary); border: 2px solid var(--primary); width: 100px !important; }
+        .count-input { font-size: 1.2em; font-weight: bold; color: var(--primary); border: 2px solid var(--primary); width: 100px !important; text-align: center; }
+        
         .package-card { background: #f8f9fa; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; margin-bottom: 15px; }
         .dimensions { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
-        button { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; }
         
+        button { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; transition: 0.3s; }
+        button:hover { background: #003d82; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+
         #success-overlay {
             display: none;
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: white;
-            z-index: 10;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 40px;
+            background: white; z-index: 10;
+            flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 40px;
         }
         .success-icon { font-size: 4em; color: var(--success); margin-bottom: 20px; }
     </style>
@@ -44,7 +50,7 @@
     <div id="success-overlay">
         <div class="success-icon">✓</div>
         <h2>Auftrag erfolgreich übermittelt</h2>
-        <p>Vielen Dank! Ihr Abholauftrag wurde im System registriert und wird nun verarbeitet.<br>Sie erhalten in Kürze eine Bestätigung per E-Mail.</p>
+        <p>Vielen Dank! Ihr Abholauftrag wurde im System registriert und wird nun verarbeitet.</p>
         <button onclick="location.reload()" style="width: auto; padding: 10px 30px; background: #6c757d;">Neuer Auftrag</button>
     </div>
 
@@ -56,36 +62,58 @@
         <div class="section">
             <div class="section-title">1. Absender & Kontakt</div>
             <div class="grid">
-                <div class="full"><label>Firma *</label><input type="text" name="Absender_Firma" required></div>
-                <div><label>Ansprechpartner *</label><input type="text" name="Kontaktperson" required></div>
-                <div><label>Telefon *</label><input type="tel" name="Telefon" required></div>
-                <div class="full"><label>E-Mail *</label><input type="email" name="Absender_Email" required></div>
-                <div><label>Ort *</label><input type="text" name="Ort" required></div>
-                <div><label>PLZ *</label><input type="text" name="PLZ" required></div>
-                <div class="full"><label>Straße, Hausnr. *</label><input type="text" name="Strasse_Hnr" required></div>
+                <div class="full">
+                    <label>Firma *</label>
+                    <input type="text" name="Absender_Firma" required>
+                </div>
+                <div>
+                    <label>Ansprechpartner *</label>
+                    <input type="text" name="Kontaktperson" required>
+                </div>
+                <div>
+                    <label>Telefon *</label>
+                    <input type="tel" name="Telefon" required>
+                </div>
+                <div class="full">
+                    <label>E-Mail *</label>
+                    <input type="email" name="Absender_Email" required>
+                </div>
+                <div>
+                    <label>Ort *</label>
+                    <input type="text" name="Ort" required>
+                </div>
+                <div>
+                    <label>PLZ *</label>
+                    <input type="text" name="PLZ" required>
+                </div>
+                <div class="full">
+                    <label>Straße, Hausnr. *</label>
+                    <input type="text" name="Strasse_Hnr" required>
+                </div>
             </div>
         </div>
 
         <div class="section">
             <div class="section-title">2. Geräte-Infos</div>
+            
             <div style="margin-bottom: 20px;">
                 <label>Modelle & Zubehör *</label>
-                <textarea name="Geraete_Liste" rows="3" placeholder="z.B. CMC 356, Testkabel-Set..." required></textarea>
+                <textarea name="Geraete_Liste" rows="3" placeholder="" required></textarea>
             </div>
             
             <div style="margin-bottom: 20px;">
                 <label>Seriennummer(n) *</label>
-                <input type="text" name="Seriennummern" placeholder="z.B. 23784720, 28365782" required>
+                <input type="text" name="Seriennummern" placeholder="" required>
             </div>
 
             <div style="margin-bottom: 10px;">
                 <label>Servicegrund *</label>
-                <input type="text" name="Service_Grund" placeholder="z.B. Kalibrierung, Reparatur, Upgrade..." required>
+                <input type="text" name="Service_Grund" placeholder="" required>
             </div>
         </div>
 
         <div class="count-selector">
-            <label>Wieviele Packstücke (Pakete/Paletten) sind es insgesamt?</label>
+            <label>Wieviele Packstücke sind es insgesamt?</label>
             <input type="number" id="packageCount" name="Anzahl_Packstuecke" value="1" min="1" max="15" class="count-input">
         </div>
 
@@ -97,10 +125,16 @@
         <div class="section">
             <div class="section-title">4. Terminierung</div>
             <div class="grid">
-                <div><label>Wunschdatum der Abholung *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
-                <div><label>Abholzeitraum / Öffnungszeiten</label><input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 15:00"></div>
+                <div>
+                    <label>Wunschdatum *</label>
+                    <input type="date" id="pickupDate" name="Abholdatum" required>
+                </div>
+                <div>
+                    <label>Zeitfenster</label>
+                    <input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 15:00">
+                </div>
                 <div class="full">
-                    <label>Zusätzliche Logistik-Infos</label>
+                    <label>Logistik-Infos (optional)</label>
                     <textarea name="Zusatzinfo_Logistik" rows="2" placeholder="Besonderheiten für den Fahrer..."></textarea>
                 </div>
             </div>
@@ -111,6 +145,7 @@
 </div>
 
 <script>
+    // JS-Logik für dynamische Felder und Versand - Unverändert, da sie funktioniert
     const container = document.getElementById('packageContainer');
     const selector = document.getElementById('packageCount');
     const pickupForm = document.getElementById('pickupForm');
@@ -140,7 +175,7 @@
         e.preventDefault();
         const btn = document.getElementById('submitBtn');
         btn.disabled = true;
-        btn.innerText = "Wird sicher übertragen...";
+        btn.innerText = "Wird übertragen...";
 
         const formData = new FormData(pickupForm);
         const ACTION_URL = "https://script.google.com/macros/s/AKfycby0LARmBoom7jaqZv-5qFPm4DhiiQ6Brs6RPlu3zh6l4AZ94tfkD8OvgEORrB9F8WOvtg/exec";
@@ -153,7 +188,7 @@
             document.getElementById('success-overlay').style.display = 'flex';
             window.scrollTo(0, 0);
         }).catch(err => {
-            alert("Fehler beim Senden. Bitte prüfen Sie Ihre Internetverbindung.");
+            alert("Fehler beim Senden.");
             btn.disabled = false;
             btn.innerText = "Abholauftrag verbindlich senden";
         });
