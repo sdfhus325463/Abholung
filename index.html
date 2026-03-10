@@ -5,114 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OMICRON Pick-up Service | Professional Portal</title>
     <style>
-        :root { 
-            --primary: #0056b3; 
-            --primary-dark: #003d82;
-            --bg: #f4f7f9; 
-            --card: #ffffff; 
-            --success: #28a745; 
-        }
+        :root { --primary: #0056b3; --bg: #f4f7f9; --card: #ffffff; --warn-bg: #fff3cd; --warn-border: #ffeeba; --warn-text: #856404; --success: #28a745; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); padding: 0; margin: 0; color: #333; line-height: 1.5; }
         
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); padding: 0; margin: 0; color: #333; }
-
-        /* --- RADIKALES ÜBERSCHREIBEN DES GOOGLE-BALKENS --- */
-        .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame {
-            display: none !important;
-        }
-        body { top: 0px !important; }
-        .goog-tooltip { display: none !important; }
-        .goog-tooltip:hover { display: none !important; }
-        .goog-text-highlight { background-color: transparent !important; border: none !important; box-shadow: none !important; }
-
-        /* --- EIGENER MODERNES SPRACH-CENTER --- */
-        .custom-language-container {
-            width: 100%;
+        /* --- STYLES FÜR DEN NEUEN SPRACH-HEADER --- */
+        .custom-lang-bar {
             background: #ffffff;
-            padding: 15px 0;
+            padding: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
             border-bottom: 2px solid var(--primary);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
             z-index: 9999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-        .lang-button {
+        .lang-trigger-btn {
             background: var(--primary);
             color: white;
-            padding: 10px 25px;
+            padding: 8px 20px;
             border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            font-size: 0.9em;
+            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 700;
-            font-size: 0.95em;
-            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
+            transition: background 0.3s;
         }
-
-        .lang-button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .lang-button i { font-style: normal; font-size: 1.2em; }
-
-        /* Das Google Widget selbst verstecken wir im Button */
-        #google_translate_element {
-            opacity: 0;
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-        }
-
-        /* --- FORMULAR DESIGN --- */
-        .container { max-width: 850px; margin: 40px auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; }
-        .header { background: var(--primary); color: white; padding: 40px; text-align: center; }
-        .header h2 { margin: 0; font-size: 2em; letter-spacing: 1px; text-transform: uppercase; }
+        .lang-trigger-btn:hover { background: #003d82; }
         
-        .form-body { padding: 40px; }
-        .section { margin-bottom: 40px; border-left: 5px solid var(--primary); padding-left: 20px; }
-        .section-title { font-weight: 800; font-size: 1.1em; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; }
-        
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        /* Google Translate Elemente verstecken */
+        #google_translate_element { opacity: 0; position: absolute; width: 1px; height: 1px; overflow: hidden; }
+        .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame { display: none !important; }
+        body { top: 0px !important; }
+
+        /* --- DEIN ORIGINAL-FORMAT --- */
+        .container { max-width: 850px; margin: 20px auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; position: relative; min-height: 400px; }
+        .header { background: var(--primary); color: white; padding: 25px; text-align: center; }
+        .header h2 { margin: 0; font-size: 1.8em; letter-spacing: 1px; font-weight: 700; }
+        .form-body { padding: 30px; }
+        .section { margin-bottom: 35px; border-left: 4px solid var(--primary); padding-left: 20px; }
+        .section-title { font-weight: 700; font-size: 1.1em; margin-bottom: 20px; color: var(--primary); text-transform: uppercase; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .full { grid-column: span 2; }
-        
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1em; }
-        
-        button#submitBtn { 
-            background: var(--primary); color: white; border: none; padding: 20px; 
-            width: 100%; border-radius: 8px; font-weight: 700; font-size: 1.1em; cursor: pointer;
-            transition: background 0.3s; margin-top: 20px;
-        }
-        button#submitBtn:hover { background: var(--primary-dark); }
-
-        .package-card { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e1e4e8; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9em; color: #444; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; font-family: inherit; transition: border 0.2s; }
+        .safety-alert { background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 15px 20px; margin: 20px 0; color: #856404; font-size: 0.95em; }
+        .count-selector { background: #e7f3ff; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--primary); }
+        .count-input { font-size: 1.2em; font-weight: bold; color: var(--primary); border: 2px solid var(--primary); width: 100px !important; text-align: center; }
+        .package-card { background: #f8f9fa; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; margin-bottom: 15px; }
         .dimensions { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
-
-        #success-overlay { display: none; padding: 100px 40px; text-align: center; flex-direction: column; align-items: center; }
+        button#submitBtn { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; transition: 0.3s; }
+        button#submitBtn:hover { background: #003d82; }
+        #success-overlay { display: none; padding: 60px 30px; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .success-icon { font-size: 60px; color: var(--success); margin-bottom: 20px; }
+        #success-overlay h1 { color: var(--primary); margin-bottom: 15px; margin-top: 0; }
+        .btn-reload { display: inline-block; margin-top: 30px; padding: 15px 30px; background: var(--primary); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="custom-language-container">
-    <div class="lang-button" onclick="triggerGoogleTranslate()">
-        <i>🌐</i> Select your Language / Sprache wählen
-    </div>
+<div class="custom-lang-bar">
+    <button class="lang-trigger-btn" onclick="openLangMenu()">
+        🌐 Select Language / Sprache wählen
+    </button>
     <div id="google_translate_element"></div>
 </div>
 
 <div class="container">
     <div id="success-overlay">
-        <h1 style="color:var(--success)">✓</h1>
-        <h2>Vielen Dank!</h2>
-        <p>Ihr Auftrag wurde gesendet.</p>
-        <button onclick="location.reload()" class="lang-button" style="box-shadow:none">Neuer Auftrag</button>
+        <div class="success-icon">✓</div>
+        <h1>Vielen Dank!</h1>
+        <p>Ihr Abholauftrag wurde erfolgreich übermittelt. Wir prüfen die Daten und senden Ihnen die Versanddokumente an die angegebene E-Mail-Adresse.</p>
+        <button onclick="location.reload()" class="btn-reload">Neuer Auftrag</button>
     </div>
 
     <div id="main-content">
@@ -135,35 +103,51 @@
             </div>
 
             <div class="section">
-                <div class="section-title">2. Geräte & Service</div>
-                <textarea name="Geraete_Liste" rows="3" placeholder="Geräte und Zubehör..." required style="margin-bottom:15px;"></textarea>
-                <div class="grid">
-                    <div><label>Seriennummer(n) *</label><input type="text" name="Seriennummern" required></div>
-                    <div><label>Servicegrund *</label><input type="text" name="Service_Grund" required></div>
+                <div class="section-title">2. Geräte-Infos</div>
+                <div style="margin-bottom: 20px;">
+                    <label>Modelle & Zubehör *</label>
+                    <textarea name="Geraete_Liste" rows="3" placeholder="z.B. CMC 500 - Testing Cable" required></textarea>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label>Seriennummer(n) *</label>
+                    <input type="text" name="Seriennummern" placeholder="z.B. 12345678" required>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label>Servicegrund *</label>
+                    <input type="text" name="Service_Grund" placeholder="z.B. Reparatur, Kalibrierung, Upgrade" required>
                 </div>
             </div>
 
-            <div style="background:#e7f3ff; padding:20px; border-radius:8px; margin-bottom:30px; text-align:center;">
-                <label>Anzahl der Packstücke:</label>
-                <input type="number" id="packageCount" name="Anzahl_Packstuecke" value="1" min="1" max="15" style="width:80px; font-weight:bold; text-align:center;">
+            <div class="count-selector">
+                <label>Wieviele Packstücke sind es insgesamt?</label>
+                <input type="number" id="packageCount" name="Anzahl_Packstuecke" value="1" min="1" max="15" class="count-input">
             </div>
-
-            <div id="packageContainer"></div>
 
             <div class="section">
-                <div class="section-title">3. Termin</div>
+                <div class="section-title">3. Details der Packstücke</div>
+                <div id="packageContainer"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">4. Terminierung</div>
                 <div class="grid">
                     <div><label>Wunschdatum *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
-                    <div><label>Zeitfenster</label><input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 16:00"></div>
+                    <div><label>Zeitfenster</label><input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 15:00"></div>
+                    <div class="full">
+                        <label>Logistik-Infos (optional)</label>
+                        <textarea name="Zusatzinfo_Logistik" rows="2" placeholder="z.B. Rampe vorhanden"></textarea>
+                    </div>
                 </div>
             </div>
 
-            <button type="submit" id="submitBtn">Abholauftrag jetzt senden</button>
+            <button type="submit" id="submitBtn">Abholauftrag verbindlich senden</button>
         </form>
     </div>
 </div>
 
 <script type="text/javascript">
+    // Google Translate Initialisierung
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
             pageLanguage: 'de',
@@ -172,58 +156,102 @@
             autoDisplay: false
         }, 'google_translate_element');
     }
-
-    // Funktion um das versteckte Google-Menü zu öffnen
-    function triggerGoogleTranslate() {
-        const googleDiv = document.querySelector('.goog-te-gadget-simple');
-        if (googleDiv) {
-            googleDiv.querySelector('span').click(); // Simuliert den Klick auf das Google Menü
-        } else {
-            alert("Sprachmenü lädt noch... bitte kurz warten.");
+    
+    // Öffnet das versteckte Google-Dropdown
+    function openLangMenu() {
+        const simple = document.querySelector('.goog-te-gadget-simple');
+        if (simple) {
+            simple.querySelector('span').click();
         }
     }
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <script>
-    // Formular Logik
+    /* DEINE ORIGINALEN FUNKTIONEN */
     const container = document.getElementById('packageContainer');
     const selector = document.getElementById('packageCount');
-    
-    function renderPackages() {
-        let count = selector.value;
-        container.innerHTML = '';
-        for (let i = 1; i <= count; i++) {
-            container.innerHTML += `
-                <div class="package-card">
-                    <div style="font-weight:bold; color:var(--primary); margin-bottom:10px;">Packstück #${i}</div>
-                    <div class="dimensions">
-                        <input type="number" name="P${i}_L" placeholder="L cm" required>
-                        <input type="number" name="P${i}_B" placeholder="B cm" required>
-                        <input type="number" name="P${i}_H" placeholder="H cm" required>
-                        <input type="number" name="P${i}_KG" placeholder="KG" step="0.1" required>
-                    </div>
-                </div>`;
+    const pickupForm = document.getElementById('pickupForm');
+    const dateInput = document.getElementById('pickupDate');
+    const mainContent = document.getElementById('main-content');
+    const successOverlay = document.getElementById('success-overlay');
+
+    function setMinDate() {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+    }
+
+    function updateDimensions(selectElement, index) {
+        const card = selectElement.closest('.package-card');
+        const lInput = card.querySelector(`input[name="P${index}_L"]`);
+        const bInput = card.querySelector(`input[name="P${index}_B"]`);
+        const hInput = card.querySelector(`input[name="P${index}_H"]`);
+
+        switch(selectElement.value) {
+            case "Euro Palette (120x80)":
+                lInput.value = 120; bInput.value = 80; hInput.value = ""; break;
+            case "Kleine Palette (60x80)":
+                lInput.value = 80; bInput.value = 60; hInput.value = ""; break;
+            default:
+                lInput.value = ""; bInput.value = ""; hInput.value = "";
         }
     }
-    selector.addEventListener('input', renderPackages);
-    window.onload = renderPackages;
 
-    document.getElementById('pickupForm').addEventListener('submit', function(e) {
+    function renderPackages() {
+        let count = parseInt(selector.value) || 1;
+        container.innerHTML = '';
+        for (let i = 1; i <= count; i++) {
+            const card = document.createElement('div');
+            card.className = 'package-card';
+            card.innerHTML = `
+                <div style="font-weight:bold; margin-bottom:10px; color:#0056b3;">Packstück #${i}</div>
+                <div style="margin-bottom:10px;">
+                    <label>Typ des Packstücks *</label>
+                    <select name="P${i}_Typ" onchange="updateDimensions(this, ${i})" required>
+                        <option value="Paket">Paket / Karton</option>
+                        <option value="Original Omicron Koffer">Original Omicron Koffer</option>
+                        <option value="Euro Palette (120x80)">Euro Palette (120x80)</option>
+                        <option value="Kleine Palette (60x80)">Kleine Palette (60x80)</option>
+                    </select>
+                </div>
+                <div class="dimensions">
+                    <div><label>L (cm)</label><input type="number" name="P${i}_L" required min="1"></div>
+                    <div><label>B (cm)</label><input type="number" name="P${i}_B" required min="1"></div>
+                    <div><label>H (cm)</label><input type="number" name="P${i}_H" required min="1"></div>
+                    <div><label>KG</label><input type="number" name="P${i}_Gewicht" step="0.1" required min="0.1"></div>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+    }
+    
+    selector.addEventListener('input', renderPackages);
+    window.addEventListener('DOMContentLoaded', () => {
+        renderPackages();
+        setMinDate();
+    });
+
+    pickupForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const btn = document.getElementById('submitBtn');
-        btn.disabled = true; btn.innerText = "Senden...";
-        
-        fetch("https://script.google.com/macros/s/AKfycbz34Tfa1a0jpe2-qtF1lt8Qy42cY9HurHQ9JPp8zVgAji7GFZ3yVCYLwymxjOaoCbwYKQ/exec", {
+        btn.disabled = true;
+        btn.innerText = "Wird übertragen...";
+        const formData = new FormData(pickupForm);
+        const ACTION_URL = "https://script.google.com/macros/s/AKfycbz34Tfa1a0jpe2-qtF1lt8Qy42cY9HurHQ9JPp8zVgAji7GFZ3yVCYLwymxjOaoCbwYKQ/exec";
+        fetch(ACTION_URL, {
             method: 'POST',
-            body: new FormData(this),
+            body: formData,
             mode: 'no-cors'
         }).then(() => {
-            document.getElementById('main-content').style.display = 'none';
-            document.getElementById('success-overlay').style.display = 'flex';
+            mainContent.style.display = 'none';
+            successOverlay.style.display = 'flex';
+            window.scrollTo(0, 0);
+        }).catch(err => {
+            alert("Fehler beim Senden.");
+            btn.disabled = false;
+            btn.innerText = "Abholauftrag verbindlich senden";
         });
     });
 </script>
-
 </body>
 </html>
