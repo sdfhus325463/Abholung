@@ -19,16 +19,15 @@
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; font-family: inherit; transition: border 0.2s; }
         input:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px rgba(0,86,179,0.1); }
         
-        /* EXPLIZITER STYLE FÜR DIE SICHERHEITSMELDUNG */
+        /* Sicherheitsmeldung Style */
         .safety-alert { 
-            background-color: #fff3cd !important; 
-            border: 1px solid #ffeeba !important;
-            color: #856404 !important;
+            background: #fff3cd; 
+            border: 1px solid #ffeeba;
             border-radius: 8px; 
             padding: 15px 20px; 
             margin: 20px 0; 
+            color: #856404;
             font-size: 0.95em;
-            display: block; /* Sicherstellen, dass sie angezeigt wird */
         }
 
         .count-selector { background: #e7f3ff; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--primary); }
@@ -72,8 +71,8 @@
         <div class="section">
             <div class="section-title">2. Geräte-Infos</div>
             <div style="margin-bottom: 20px;">
-                <label>Welche(s) Gerät(e) werden zurückgeschickt? (Modell & Zubehör) *</label>
-                <textarea name="Geraete_Liste" rows="3" placeholder="z.B. 1x CMC 356, 2x Testkabel-Set..." required></textarea>
+                <label>Modelle & Zubehör *</label>
+                <textarea name="Geraete_Liste" rows="3" placeholder="z.B. CMC 500 - Testing Cable" required></textarea>
             </div>
 
             <div class="safety-alert">
@@ -86,8 +85,8 @@
                 <input type="text" name="Seriennummern" placeholder="z.B. 12345678" required>
             </div>
             <div style="margin-bottom: 10px;">
-                <label>Grund der Rücksendung *</label>
-                <input type="text" name="Service_Grund" placeholder="Grund (z.B. Defekt, Kalibrierung, Upgrade...)" required>
+                <label>Servicegrund *</label>
+                <input type="text" name="Service_Grund" placeholder="z.B. Reparatur, Kalibrierung, Upgrade" required>
             </div>
         </div>
 
