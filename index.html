@@ -18,6 +18,18 @@
         label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9em; color: #444; }
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; font-family: inherit; transition: border 0.2s; }
         input:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px rgba(0,86,179,0.1); }
+        
+        /* Style für die Sicherheitsmeldung */
+        .safety-alert { 
+            background: var(--warn-bg); 
+            border: 1px solid var(--warn-border);
+            border-radius: 8px; 
+            padding: 15px 20px; 
+            margin: 20px 0; 
+            color: var(--warn-text);
+            font-size: 0.95em;
+        }
+
         .count-selector { background: #e7f3ff; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--primary); }
         .count-input { font-size: 1.2em; font-weight: bold; color: var(--primary); border: 2px solid var(--primary); width: 100px !important; text-align: center; }
         .package-card { background: #f8f9fa; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; margin-bottom: 15px; }
@@ -59,16 +71,22 @@
         <div class="section">
             <div class="section-title">2. Geräte-Infos</div>
             <div style="margin-bottom: 20px;">
-                <label>Modelle & Zubehör *</label>
-                <textarea name="Geraete_Liste" rows="3" placeholder="z.B. CMC 500 - Testing Cable" required></textarea>
+                <label>Welche(s) Gerät(e) werden zurückgeschickt? (Modell & Zubehör) *</label>
+                <textarea name="Geraete_Liste" rows="3" placeholder="z.B. 1x CMC 356, 2x Testkabel-Set..." required></textarea>
             </div>
+
+            <div class="safety-alert">
+                ⚠️ <strong>Wichtiger Sicherheitshinweis</strong><br>
+                Bei Rücksendung eines <strong>COMPANO 100</strong>: Bitte das Gerät nach Möglichkeit <strong>ohne Batterie</strong> versenden, um zusätzliche Gefahrgut-Auflagen zu vermeiden!
+            </div>
+
             <div style="margin-bottom: 20px;">
                 <label>Seriennummer(n) *</label>
                 <input type="text" name="Seriennummern" placeholder="z.B. 12345678" required>
             </div>
             <div style="margin-bottom: 10px;">
-                <label>Servicegrund *</label>
-                <input type="text" name="Service_Grund" placeholder="z.B. Reparatur, Kalibrierung, Upgrade" required>
+                <label>Grund der Rücksendung *</label>
+                <input type="text" name="Service_Grund" placeholder="Grund (z.B. Defekt, Kalibrierung, Upgrade...)" required>
             </div>
         </div>
 
@@ -104,7 +122,6 @@
     const pickupForm = document.getElementById('pickupForm');
     const dateInput = document.getElementById('pickupDate');
 
-    // Setzt das Mindestdatum auf HEUTE
     function setMinDate() {
         const today = new Date().toISOString().split('T')[0];
         dateInput.setAttribute('min', today);
