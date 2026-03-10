@@ -65,7 +65,7 @@
                 <div class="grid">
                     <div class="full"><label>Company *</label><input type="text" name="Absender_Firma" required></div>
                     <div><label>Contact Person *</label><input type="text" name="Kontaktperson" required></div>
-                    <div><label>Phone *</label><input type="tel" name="Telefon" required></div>
+                    <div><label>Phone number *</label><input type="tel" name="Telefon" required></div>
                     <div class="full"><label>Email *</label><input type="email" name="Absender_Email" required></div>
                     <div><label>City *</label><input type="text" name="Ort" required></div>
                     <div><label>Zip Code *</label><input type="text" name="PLZ" required></div>
@@ -76,13 +76,8 @@
             <div class="section">
                 <div class="section-title">2. Device Info</div>
                 <div style="margin-bottom: 20px;">
-                    <label>Models & Accessories *</label>
+                    <label>Products & Accessories *</label>
                     <textarea name="Geraete_Liste" rows="3" placeholder="e.g. CMC 500 - Testing Cable" required></textarea>
-                </div>
-
-                <div class="safety-alert">
-                    ⚠️ <strong>Important Safety Note</strong><br>
-                    When returning a <strong>COMPANO 100</strong>: Please ship the device <strong>without the battery</strong> if possible to avoid additional dangerous goods regulations!
                 </div>
 
                 <div style="margin-bottom: 20px;">
@@ -108,8 +103,8 @@
             <div class="section">
                 <div class="section-title">4. Scheduling</div>
                 <div class="grid">
-                    <div><label>Requested Date *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
-                    <div><label>Time Window</label><input type="text" name="Zeitfenster" placeholder="e.g. 08:00 - 15:00"></div>
+                    <div><label>Requested Date for pick-up *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
+                    <div><label>Time Window for pick-up</label><input type="text" name="Zeitfenster" placeholder="e.g. 08:00 - 15:00"></div>
                     <div class="full">
                         <label>Logistics Info (optional)</label>
                         <textarea name="Zusatzinfo_Logistik" rows="2" placeholder="e.g. Loading dock available"></textarea>
