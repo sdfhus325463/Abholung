@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OMICRON Pick-up Service | Professional Portal</title>
     <style>
-        /* Bestehender Style - Unverändert für das professionelle Look & Feel */
         :root { --primary: #0056b3; --bg: #f4f7f9; --card: #ffffff; --warn-bg: #fff3cd; --warn-border: #ffeeba; --warn-text: #856404; --success: #28a745; }
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); padding: 20px; color: #333; line-height: 1.5; }
         .container { max-width: 850px; margin: 0 auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
@@ -14,33 +13,18 @@
         .form-body { padding: 30px; }
         .section { margin-bottom: 35px; border-left: 4px solid var(--primary); padding-left: 20px; }
         .section-title { font-weight: 700; font-size: 1.1em; margin-bottom: 20px; color: var(--primary); text-transform: uppercase; }
-        
-        /* Grid-System für die Anordnung */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .full { grid-column: span 2; }
-        
         label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9em; color: #444; }
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; font-family: inherit; transition: border 0.2s; }
         input:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px rgba(0,86,179,0.1); }
-        
         .count-selector { background: #e7f3ff; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--primary); }
         .count-input { font-size: 1.2em; font-weight: bold; color: var(--primary); border: 2px solid var(--primary); width: 100px !important; text-align: center; }
-        
         .package-card { background: #f8f9fa; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; margin-bottom: 15px; }
         .dimensions { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
-        
         button { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; transition: 0.3s; }
         button:hover { background: #003d82; }
-        button:disabled { background: #ccc; cursor: not-allowed; }
-
-        #success-overlay {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: white; z-index: 10;
-            flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 40px;
-        }
+        #success-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; }
         .success-icon { font-size: 4em; color: var(--success); margin-bottom: 20px; }
     </style>
 </head>
@@ -50,7 +34,7 @@
     <div id="success-overlay">
         <div class="success-icon">✓</div>
         <h2>Auftrag erfolgreich übermittelt</h2>
-        <p>Vielen Dank! Ihr Abholauftrag wurde im System registriert und wird nun verarbeitet.</p>
+        <p>Vielen Dank! Ihr Abholauftrag wurde im System registriert.</p>
         <button onclick="location.reload()" style="width: auto; padding: 10px 30px; background: #6c757d;">Neuer Auftrag</button>
     </div>
 
@@ -62,54 +46,21 @@
         <div class="section">
             <div class="section-title">1. Absender & Kontakt</div>
             <div class="grid">
-                <div class="full">
-                    <label>Firma *</label>
-                    <input type="text" name="Absender_Firma" required>
-                </div>
-                <div>
-                    <label>Ansprechpartner *</label>
-                    <input type="text" name="Kontaktperson" required>
-                </div>
-                <div>
-                    <label>Telefon *</label>
-                    <input type="tel" name="Telefon" required>
-                </div>
-                <div class="full">
-                    <label>E-Mail *</label>
-                    <input type="email" name="Absender_Email" required>
-                </div>
-                <div>
-                    <label>Ort *</label>
-                    <input type="text" name="Ort" required>
-                </div>
-                <div>
-                    <label>PLZ *</label>
-                    <input type="text" name="PLZ" required>
-                </div>
-                <div class="full">
-                    <label>Straße, Hausnr. *</label>
-                    <input type="text" name="Strasse_Hnr" required>
-                </div>
+                <div class="full"><label>Firma *</label><input type="text" name="Absender_Firma" required></div>
+                <div><label>Ansprechpartner *</label><input type="text" name="Kontaktperson" required></div>
+                <div><label>Telefon *</label><input type="tel" name="Telefon" required></div>
+                <div class="full"><label>E-Mail *</label><input type="email" name="Absender_Email" required></div>
+                <div><label>Ort *</label><input type="text" name="Ort" required></div>
+                <div><label>PLZ *</label><input type="text" name="PLZ" required></div>
+                <div class="full"><label>Straße, Hausnr. *</label><input type="text" name="Strasse_Hnr" required></div>
             </div>
         </div>
 
         <div class="section">
             <div class="section-title">2. Geräte-Infos</div>
-            
-            <div style="margin-bottom: 20px;">
-                <label>Modelle & Zubehör *</label>
-                <textarea name="Geraete_Liste" rows="3" placeholder="" required></textarea>
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-                <label>Seriennummer(n) *</label>
-                <input type="text" name="Seriennummern" placeholder="" required>
-            </div>
-
-            <div style="margin-bottom: 10px;">
-                <label>Servicegrund *</label>
-                <input type="text" name="Service_Grund" placeholder="" required>
-            </div>
+            <div style="margin-bottom: 20px;"><label>Modelle & Zubehör *</label><textarea name="Geraete_Liste" rows="3" required></textarea></div>
+            <div style="margin-bottom: 20px;"><label>Seriennummer(n) *</label><input type="text" name="Seriennummern" required></div>
+            <div style="margin-bottom: 10px;"><label>Servicegrund *</label><input type="text" name="Service_Grund" required></div>
         </div>
 
         <div class="count-selector">
@@ -125,18 +76,9 @@
         <div class="section">
             <div class="section-title">4. Terminierung</div>
             <div class="grid">
-                <div>
-                    <label>Wunschdatum *</label>
-                    <input type="date" id="pickupDate" name="Abholdatum" required>
-                </div>
-                <div>
-                    <label>Zeitfenster</label>
-                    <input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 15:00">
-                </div>
-                <div class="full">
-                    <label>Logistik-Infos (optional)</label>
-                    <textarea name="Zusatzinfo_Logistik" rows="2" placeholder="Besonderheiten für den Fahrer..."></textarea>
-                </div>
+                <div><label>Wunschdatum *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
+                <div><label>Zeitfenster</label><input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 15:00"></div>
+                <div class="full"><label>Logistik-Infos (optional)</label><textarea name="Zusatzinfo_Logistik" rows="2"></textarea></div>
             </div>
         </div>
 
@@ -145,10 +87,31 @@
 </div>
 
 <script>
-    // JS-Logik für dynamische Felder und Versand - Unverändert, da sie funktioniert
     const container = document.getElementById('packageContainer');
     const selector = document.getElementById('packageCount');
     const pickupForm = document.getElementById('pickupForm');
+
+    // Funktion zum automatischen Ausfüllen der Maße basierend auf dem Typ
+    function updateDimensions(index) {
+        const typeSelect = document.getElementsByName(`P${index}_Typ`)[0];
+        const lInput = document.getElementsByName(`P${index}_L`)[0];
+        const bInput = document.getElementsByName(`P${index}_B`)[0];
+        const hInput = document.getElementsByName(`P${index}_H`)[0];
+
+        switch(typeSelect.value) {
+            case "Original Omicron Koffer":
+                lInput.value = 56; bInput.value = 45; hInput.value = 27;
+                break;
+            case "Euro Palette (120x80)":
+                lInput.value = 120; bInput.value = 80; hInput.value = "";
+                break;
+            case "Kleine Palette (60x80)":
+                lInput.value = 80; bInput.value = 60; hInput.value = "";
+                break;
+            default:
+                lInput.value = ""; bInput.value = ""; hInput.value = "";
+        }
+    }
 
     function renderPackages() {
         let count = parseInt(selector.value) || 1;
@@ -158,6 +121,15 @@
             card.className = 'package-card';
             card.innerHTML = `
                 <div style="font-weight:bold; margin-bottom:10px; color:#0056b3;">Packstück #${i}</div>
+                <div style="margin-bottom:10px;">
+                    <label>Typ des Packstücks *</label>
+                    <select name="P${i}_Typ" onchange="updateDimensions(${i})" required>
+                        <option value="Paket">Paket / Karton</option>
+                        <option value="Original Omicron Koffer">Original Omicron Koffer</option>
+                        <option value="Euro Palette (120x80)">Euro Palette (120x80)</option>
+                        <option value="Kleine Palette (60x80)">Kleine Palette (60x80)</option>
+                    </select>
+                </div>
                 <div class="dimensions">
                     <div><label>L (cm)</label><input type="number" name="P${i}_L" required min="1"></div>
                     <div><label>B (cm)</label><input type="number" name="P${i}_B" required min="1"></div>
@@ -168,6 +140,7 @@
             container.appendChild(card);
         }
     }
+    
     selector.addEventListener('input', renderPackages);
     window.addEventListener('DOMContentLoaded', renderPackages);
 
@@ -178,7 +151,7 @@
         btn.innerText = "Wird übertragen...";
 
         const formData = new FormData(pickupForm);
-        const ACTION_URL = "https://script.google.com/macros/s/AKfycbxT9rMiMsxSNBLtzDbpKhKRh7sNlKFN6rahjnfVI23w4srfqPpcM4EsnQeWDUjOVb8Q_w/exec";
+        const ACTION_URL = "https://script.google.com/macros/s/AKfycbz34Tfa1a0jpe2-qtF1lt8Qy42cY9HurHQ9JPp8zVgAji7GFZ3yVCYLwymxjOaoCbwYKQ/exec";
 
         fetch(ACTION_URL, {
             method: 'POST',
