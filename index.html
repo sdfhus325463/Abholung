@@ -7,7 +7,7 @@
     <style>
         :root { --primary: #0056b3; --bg: #f4f7f9; --card: #ffffff; --warn-bg: #fff3cd; --warn-border: #ffeeba; --warn-text: #856404; --success: #28a745; }
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); padding: 20px; color: #333; line-height: 1.5; }
-        .container { max-width: 850px; margin: 0 auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
+        .container { max-width: 850px; margin: 0 auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; position: relative; min-height: 400px; }
         .header { background: var(--primary); color: white; padding: 25px; text-align: center; }
         .header h2 { margin: 0; font-size: 1.8em; letter-spacing: 1px; font-weight: 700; }
         .form-body { padding: 30px; }
@@ -17,27 +17,31 @@
         .full { grid-column: span 2; }
         label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9em; color: #444; }
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; font-family: inherit; transition: border 0.2s; }
-        input:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px rgba(0,86,179,0.1); }
         
         /* Sicherheitsmeldung Style */
-        .safety-alert { 
-            background: #fff3cd; 
-            border: 1px solid #ffeeba;
-            border-radius: 8px; 
-            padding: 15px 20px; 
-            margin: 20px 0; 
-            color: #856404;
-            font-size: 0.95em;
-        }
+        .safety-alert { background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 15px 20px; margin: 20px 0; color: #856404; font-size: 0.95em; }
 
         .count-selector { background: #e7f3ff; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--primary); }
         .count-input { font-size: 1.2em; font-weight: bold; color: var(--primary); border: 2px solid var(--primary); width: 100px !important; text-align: center; }
         .package-card { background: #f8f9fa; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; margin-bottom: 15px; }
         .dimensions { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
-        button { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; transition: 0.3s; }
-        button:hover { background: #003d82; }
-        #success-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; }
-        .success-icon { font-size: 4em; color: var(--success); margin-bottom: 20px; }
+        
+        button#submitBtn { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; transition: 0.3s; }
+        button#submitBtn:hover { background: #003d82; }
+
+        /* NEUES ERFOLGS-DESIGN */
+        #success-overlay { 
+            display: none; 
+            padding: 60px 30px; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+        }
+        .success-icon { font-size: 60px; color: var(--success); margin-bottom: 20px; }
+        #success-overlay h1 { color: var(--primary); margin-bottom: 15px; margin-top: 0; }
+        #success-overlay p { line-height: 1.6; color: #555; max-width: 500px; margin: 0 auto; }
+        .btn-reload { display: inline-block; margin-top: 30px; padding: 15px 30px; background: var(--primary); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -45,75 +49,77 @@
 <div class="container">
     <div id="success-overlay">
         <div class="success-icon">✓</div>
-        <h2>Auftrag erfolgreich übermittelt</h2>
-        <p>Vielen Dank! Ihr Abholauftrag wurde im System registriert.</p>
-        <button onclick="location.reload()" style="width: auto; padding: 10px 30px; background: #6c757d;">Neuer Auftrag</button>
+        <h1>Vielen Dank!</h1>
+        <p>Ihr Abholauftrag wurde erfolgreich übermittelt. Wir prüfen die Daten und senden Ihnen die Versanddokumente in Kürze an die angegebene E-Mail-Adresse.</p>
+        <button onclick="location.reload()" class="btn-reload">Neuer Auftrag</button>
     </div>
 
-    <div class="header">
-        <h2>OMICRON Pick-up Service</h2>
-    </div>
-
-    <form class="form-body" id="pickupForm">
-        <div class="section">
-            <div class="section-title">1. Absender & Kontakt</div>
-            <div class="grid">
-                <div class="full"><label>Firma *</label><input type="text" name="Absender_Firma" required></div>
-                <div><label>Ansprechpartner *</label><input type="text" name="Kontaktperson" required></div>
-                <div><label>Telefon *</label><input type="tel" name="Telefon" required></div>
-                <div class="full"><label>E-Mail *</label><input type="email" name="Absender_Email" required></div>
-                <div><label>Ort *</label><input type="text" name="Ort" required></div>
-                <div><label>PLZ *</label><input type="text" name="PLZ" required></div>
-                <div class="full"><label>Straße, Hausnr. *</label><input type="text" name="Strasse_Hnr" required></div>
-            </div>
+    <div id="main-content">
+        <div class="header">
+            <h2>OMICRON Pick-up Service</h2>
         </div>
 
-        <div class="section">
-            <div class="section-title">2. Geräte-Infos</div>
-            <div style="margin-bottom: 20px;">
-                <label>Modelle & Zubehör *</label>
-                <textarea name="Geraete_Liste" rows="3" placeholder="z.B. CMC 500 - Testing Cable" required></textarea>
-            </div>
-
-            <div class="safety-alert">
-                ⚠️ <strong>Wichtiger Sicherheitshinweis</strong><br>
-                Bei Rücksendung eines <strong>COMPANO 100</strong>: Bitte das Gerät nach Möglichkeit <strong>ohne Batterie</strong> versenden, um zusätzliche Gefahrgut-Auflagen zu vermeiden!
-            </div>
-
-            <div style="margin-bottom: 20px;">
-                <label>Seriennummer(n) *</label>
-                <input type="text" name="Seriennummern" placeholder="z.B. 12345678" required>
-            </div>
-            <div style="margin-bottom: 10px;">
-                <label>Servicegrund *</label>
-                <input type="text" name="Service_Grund" placeholder="z.B. Reparatur, Kalibrierung, Upgrade" required>
-            </div>
-        </div>
-
-        <div class="count-selector">
-            <label>Wieviele Packstücke sind es insgesamt?</label>
-            <input type="number" id="packageCount" name="Anzahl_Packstuecke" value="1" min="1" max="15" class="count-input">
-        </div>
-
-        <div class="section">
-            <div class="section-title">3. Details der Packstücke</div>
-            <div id="packageContainer"></div>
-        </div>
-
-        <div class="section">
-            <div class="section-title">4. Terminierung</div>
-            <div class="grid">
-                <div><label>Wunschdatum *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
-                <div><label>Zeitfenster</label><input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 15:00"></div>
-                <div class="full">
-                    <label>Logistik-Infos (optional)</label>
-                    <textarea name="Zusatzinfo_Logistik" rows="2" placeholder="z.B. Rampe vorhanden"></textarea>
+        <form class="form-body" id="pickupForm">
+            <div class="section">
+                <div class="section-title">1. Absender & Kontakt</div>
+                <div class="grid">
+                    <div class="full"><label>Firma *</label><input type="text" name="Absender_Firma" required></div>
+                    <div><label>Ansprechpartner *</label><input type="text" name="Kontaktperson" required></div>
+                    <div><label>Telefon *</label><input type="tel" name="Telefon" required></div>
+                    <div class="full"><label>E-Mail *</label><input type="email" name="Absender_Email" required></div>
+                    <div><label>Ort *</label><input type="text" name="Ort" required></div>
+                    <div><label>PLZ *</label><input type="text" name="PLZ" required></div>
+                    <div class="full"><label>Straße, Hausnr. *</label><input type="text" name="Strasse_Hnr" required></div>
                 </div>
             </div>
-        </div>
 
-        <button type="submit" id="submitBtn">Abholauftrag verbindlich senden</button>
-    </form>
+            <div class="section">
+                <div class="section-title">2. Geräte-Infos</div>
+                <div style="margin-bottom: 20px;">
+                    <label>Modelle & Zubehör *</label>
+                    <textarea name="Geraete_Liste" rows="3" placeholder="z.B. CMC 500 - Testing Cable" required></textarea>
+                </div>
+
+                <div class="safety-alert">
+                    ⚠️ <strong>Wichtiger Sicherheitshinweis</strong><br>
+                    Bei Rücksendung eines <strong>COMPANO 100</strong>: Bitte das Gerät nach Möglichkeit <strong>ohne Batterie</strong> versenden, um zusätzliche Gefahrgut-Auflagen zu vermeiden!
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label>Seriennummer(n) *</label>
+                    <input type="text" name="Seriennummern" placeholder="z.B. 12345678" required>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label>Servicegrund *</label>
+                    <input type="text" name="Service_Grund" placeholder="z.B. Reparatur, Kalibrierung, Upgrade" required>
+                </div>
+            </div>
+
+            <div class="count-selector">
+                <label>Wieviele Packstücke sind es insgesamt?</label>
+                <input type="number" id="packageCount" name="Anzahl_Packstuecke" value="1" min="1" max="15" class="count-input">
+            </div>
+
+            <div class="section">
+                <div class="section-title">3. Details der Packstücke</div>
+                <div id="packageContainer"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">4. Terminierung</div>
+                <div class="grid">
+                    <div><label>Wunschdatum *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
+                    <div><label>Zeitfenster</label><input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 15:00"></div>
+                    <div class="full">
+                        <label>Logistik-Infos (optional)</label>
+                        <textarea name="Zusatzinfo_Logistik" rows="2" placeholder="z.B. Rampe vorhanden"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn">Abholauftrag verbindlich senden</button>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -121,6 +127,8 @@
     const selector = document.getElementById('packageCount');
     const pickupForm = document.getElementById('pickupForm');
     const dateInput = document.getElementById('pickupDate');
+    const mainContent = document.getElementById('main-content');
+    const successOverlay = document.getElementById('success-overlay');
 
     function setMinDate() {
         const today = new Date().toISOString().split('T')[0];
@@ -134,15 +142,10 @@
         const hInput = card.querySelector(`input[name="P${index}_H"]`);
 
         switch(selectElement.value) {
-            case "Original Omicron Koffer":
-                lInput.value = ""; bInput.value = ""; hInput.value = ""; 
-                break;
             case "Euro Palette (120x80)":
-                lInput.value = 120; bInput.value = 80; hInput.value = ""; 
-                break;
+                lInput.value = 120; bInput.value = 80; hInput.value = ""; break;
             case "Kleine Palette (60x80)":
-                lInput.value = 80; bInput.value = 60; hInput.value = ""; 
-                break;
+                lInput.value = 80; bInput.value = 60; hInput.value = ""; break;
             default:
                 lInput.value = ""; bInput.value = ""; hInput.value = "";
         }
@@ -196,7 +199,9 @@
             body: formData,
             mode: 'no-cors'
         }).then(() => {
-            document.getElementById('success-overlay').style.display = 'flex';
+            // ALTEN INHALT AUSBLENDEN, NEUES DESIGN ANZEIGEN
+            mainContent.style.display = 'none';
+            successOverlay.style.display = 'flex';
             window.scrollTo(0, 0);
         }).catch(err => {
             alert("Fehler beim Senden.");
