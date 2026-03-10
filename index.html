@@ -58,9 +58,18 @@
 
         <div class="section">
             <div class="section-title">2. Geräte-Infos</div>
-            <div style="margin-bottom: 20px;"><label>Modelle & Zubehör *</label><textarea name="Geraete_Liste" rows="3" required></textarea></div>
-            <div style="margin-bottom: 20px;"><label>Seriennummer(n) *</label><input type="text" name="Seriennummern" required></div>
-            <div style="margin-bottom: 10px;"><label>Servicegrund *</label><input type="text" name="Service_Grund" required></div>
+            <div style="margin-bottom: 20px;">
+                <label>Modelle & Zubehör *</label>
+                <textarea name="Geraete_Liste" rows="3" placeholder="z.B. CMC 500 - Testing Cable" required></textarea>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label>Seriennummer(n) *</label>
+                <input type="text" name="Seriennummern" placeholder="z.B. 12345678" required>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label>Servicegrund *</label>
+                <input type="text" name="Service_Grund" placeholder="z.B. Reparatur, Kalibrierung, Upgrade" required>
+            </div>
         </div>
 
         <div class="count-selector">
@@ -78,7 +87,10 @@
             <div class="grid">
                 <div><label>Wunschdatum *</label><input type="date" id="pickupDate" name="Abholdatum" required></div>
                 <div><label>Zeitfenster</label><input type="text" name="Zeitfenster" placeholder="z.B. 08:00 - 15:00"></div>
-                <div class="full"><label>Logistik-Infos (optional)</label><textarea name="Zusatzinfo_Logistik" rows="2"></textarea></div>
+                <div class="full">
+                    <label>Logistik-Infos (optional)</label>
+                    <textarea name="Zusatzinfo_Logistik" rows="2" placeholder="z.B. Rampe vorhanden"></textarea>
+                </div>
             </div>
         </div>
 
@@ -90,8 +102,14 @@
     const container = document.getElementById('packageContainer');
     const selector = document.getElementById('packageCount');
     const pickupForm = document.getElementById('pickupForm');
+    const dateInput = document.getElementById('pickupDate');
 
-    // Korrigierte Logik: Beim Koffer bleibt jetzt alles leer
+    // Setzt das Mindestdatum auf HEUTE
+    function setMinDate() {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+    }
+
     function updateDimensions(selectElement, index) {
         const card = selectElement.closest('.package-card');
         const lInput = card.querySelector(`input[name="P${index}_L"]`);
@@ -100,13 +118,13 @@
 
         switch(selectElement.value) {
             case "Original Omicron Koffer":
-                lInput.value = ""; bInput.value = ""; hInput.value = ""; // ALLES LEER
+                lInput.value = ""; bInput.value = ""; hInput.value = ""; 
                 break;
             case "Euro Palette (120x80)":
-                lInput.value = 120; bInput.value = 80; hInput.value = ""; // Grundmaß fix
+                lInput.value = 120; bInput.value = 80; hInput.value = ""; 
                 break;
             case "Kleine Palette (60x80)":
-                lInput.value = 80; bInput.value = 60; hInput.value = ""; // Grundmaß fix
+                lInput.value = 80; bInput.value = 60; hInput.value = ""; 
                 break;
             default:
                 lInput.value = ""; bInput.value = ""; hInput.value = "";
@@ -142,7 +160,10 @@
     }
     
     selector.addEventListener('input', renderPackages);
-    window.addEventListener('DOMContentLoaded', renderPackages);
+    window.addEventListener('DOMContentLoaded', () => {
+        renderPackages();
+        setMinDate();
+    });
 
     pickupForm.addEventListener('submit', function(e) {
         e.preventDefault();
