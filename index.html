@@ -91,22 +91,22 @@
     const selector = document.getElementById('packageCount');
     const pickupForm = document.getElementById('pickupForm');
 
-    // Funktion zum automatischen Ausfüllen der Maße basierend auf dem Typ
-    function updateDimensions(index) {
-        const typeSelect = document.getElementsByName(`P${index}_Typ`)[0];
-        const lInput = document.getElementsByName(`P${index}_L`)[0];
-        const bInput = document.getElementsByName(`P${index}_B`)[0];
-        const hInput = document.getElementsByName(`P${index}_H`)[0];
+    // Angepasste Logik: Höhe (H) bleibt bei Koffer/Paletten zur manuellen Eingabe leer
+    function updateDimensions(selectElement, index) {
+        const card = selectElement.closest('.package-card');
+        const lInput = card.querySelector(`input[name="P${index}_L"]`);
+        const bInput = card.querySelector(`input[name="P${index}_B"]`);
+        const hInput = card.querySelector(`input[name="P${index}_H"]`);
 
-        switch(typeSelect.value) {
+        switch(selectElement.value) {
             case "Original Omicron Koffer":
-                lInput.value = 56; bInput.value = 45; hInput.value = 27;
+                lInput.value = 56; bInput.value = 45; hInput.value = ""; // Höhe manuell
                 break;
             case "Euro Palette (120x80)":
-                lInput.value = 120; bInput.value = 80; hInput.value = "";
+                lInput.value = 120; bInput.value = 80; hInput.value = ""; // Höhe manuell
                 break;
             case "Kleine Palette (60x80)":
-                lInput.value = 80; bInput.value = 60; hInput.value = "";
+                lInput.value = 80; bInput.value = 60; hInput.value = ""; // Höhe manuell
                 break;
             default:
                 lInput.value = ""; bInput.value = ""; hInput.value = "";
@@ -123,7 +123,7 @@
                 <div style="font-weight:bold; margin-bottom:10px; color:#0056b3;">Packstück #${i}</div>
                 <div style="margin-bottom:10px;">
                     <label>Typ des Packstücks *</label>
-                    <select name="P${i}_Typ" onchange="updateDimensions(${i})" required>
+                    <select name="P${i}_Typ" onchange="updateDimensions(this, ${i})" required>
                         <option value="Paket">Paket / Karton</option>
                         <option value="Original Omicron Koffer">Original Omicron Koffer</option>
                         <option value="Euro Palette (120x80)">Euro Palette (120x80)</option>
@@ -151,6 +151,7 @@
         btn.innerText = "Wird übertragen...";
 
         const formData = new FormData(pickupForm);
+        // Deine URL
         const ACTION_URL = "https://script.google.com/macros/s/AKfycbz34Tfa1a0jpe2-qtF1lt8Qy42cY9HurHQ9JPp8zVgAji7GFZ3yVCYLwymxjOaoCbwYKQ/exec";
 
         fetch(ACTION_URL, {
