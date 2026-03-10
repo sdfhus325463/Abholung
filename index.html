@@ -6,7 +6,19 @@
     <title>OMICRON Pick-up Service | Professional Portal</title>
     <style>
         :root { --primary: #0056b3; --bg: #f4f7f9; --card: #ffffff; --warn-bg: #fff3cd; --warn-border: #ffeeba; --warn-text: #856404; --success: #28a745; }
-        body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); padding: 20px; color: #333; line-height: 1.5; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); padding: 20px; color: #333; line-height: 1.5; margin: 0; }
+        
+        /* Google Translate Styling */
+        #google_translate_element {
+            text-align: right;
+            padding: 10px 20px;
+            background: #ebeef1;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .goog-te-gadget span { display: none !important; } /* Blendat "Powered by" Text aus */
+        .goog-te-gadget { font-size: 0.85em !important; color: #666 !important; }
+
         .container { max-width: 850px; margin: 0 auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; position: relative; min-height: 400px; }
         .header { background: var(--primary); color: white; padding: 25px; text-align: center; }
         .header h2 { margin: 0; font-size: 1.8em; letter-spacing: 1px; font-weight: 700; }
@@ -18,9 +30,7 @@
         label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9em; color: #444; }
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95em; box-sizing: border-box; font-family: inherit; transition: border 0.2s; }
         
-        /* Sicherheitsmeldung Style */
         .safety-alert { background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 15px 20px; margin: 20px 0; color: #856404; font-size: 0.95em; }
-
         .count-selector { background: #e7f3ff; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--primary); }
         .count-input { font-size: 1.2em; font-weight: bold; color: var(--primary); border: 2px solid var(--primary); width: 100px !important; text-align: center; }
         .package-card { background: #f8f9fa; border: 1px solid #e1e4e8; padding: 20px; border-radius: 8px; margin-bottom: 15px; }
@@ -29,7 +39,6 @@
         button#submitBtn { background: var(--primary); color: white; border: none; padding: 20px; font-size: 1.1em; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 20px; transition: 0.3s; }
         button#submitBtn:hover { background: #003d82; }
 
-        /* NEUES ERFOLGS-DESIGN */
         #success-overlay { 
             display: none; 
             padding: 60px 30px; 
@@ -39,19 +48,20 @@
             text-align: center; 
         }
         .success-icon { font-size: 60px; color: var(--success); margin-bottom: 20px; }
-        #success-overlay h1 { color: var(--primary); margin-bottom: 15px; margin-top: 0; }
-        #success-overlay p { line-height: 1.6; color: #555; max-width: 500px; margin: 0 auto; }
+        #success-overlay h1 { color: var(--primary); margin-bottom: 15px; }
         .btn-reload { display: inline-block; margin-top: 30px; padding: 15px 30px; background: var(--primary); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
+
+<div id="google_translate_element"></div>
 
 <div class="container">
     <div id="success-overlay">
         <div class="success-icon">✓</div>
         <h1>Vielen Dank!</h1>
         <p>Ihr Abholauftrag wurde erfolgreich übermittelt. Wir prüfen die Daten und senden Ihnen die Versanddokumente an die angegebene E-Mail-Adresse.</p>
-        <button onclick="location.reload()" class="btn-reload">Neuer Auftrag</button>
+        <button onclick="location.reload()" class="btn-reload">Neuer Auftrag / New Order</button>
     </div>
 
     <div id="main-content">
@@ -122,6 +132,19 @@
     </div>
 </div>
 
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'de',
+            // Die 25 häufigsten Sprachen inkl. Portugiesisch, Spanisch, Englisch, etc.
+            includedLanguages: 'en,es,pt,fr,it,nl,pl,tr,ru,zh-CN,ja,ar,hi,cs,hu,ro,sk,sv,da,fi,no,el,bg,hr,uk',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 <script>
     const container = document.getElementById('packageContainer');
     const selector = document.getElementById('packageCount');
@@ -158,14 +181,14 @@
             const card = document.createElement('div');
             card.className = 'package-card';
             card.innerHTML = `
-                <div style="font-weight:bold; margin-bottom:10px; color:#0056b3;">Packstück #${i}</div>
+                <div style="font-weight:bold; margin-bottom:10px; color:#0056b3;">Packstück #${i} / Package #${i}</div>
                 <div style="margin-bottom:10px;">
                     <label>Typ des Packstücks *</label>
                     <select name="P${i}_Typ" onchange="updateDimensions(this, ${i})" required>
-                        <option value="Paket">Paket / Karton</option>
-                        <option value="Original Omicron Koffer">Original Omicron Koffer</option>
-                        <option value="Euro Palette (120x80)">Euro Palette (120x80)</option>
-                        <option value="Kleine Palette (60x80)">Kleine Palette (60x80)</option>
+                        <option value="Paket">Paket / Box</option>
+                        <option value="Original Omicron Koffer">Original Omicron Case</option>
+                        <option value="Euro Palette (120x80)">Euro Pallet (120x80)</option>
+                        <option value="Kleine Palette (60x80)">Small Pallet (60x80)</option>
                     </select>
                 </div>
                 <div class="dimensions">
@@ -189,7 +212,7 @@
         e.preventDefault();
         const btn = document.getElementById('submitBtn');
         btn.disabled = true;
-        btn.innerText = "Wird übertragen...";
+        btn.innerText = "Processing...";
 
         const formData = new FormData(pickupForm);
         const ACTION_URL = "https://script.google.com/macros/s/AKfycbz34Tfa1a0jpe2-qtF1lt8Qy42cY9HurHQ9JPp8zVgAji7GFZ3yVCYLwymxjOaoCbwYKQ/exec";
@@ -199,12 +222,11 @@
             body: formData,
             mode: 'no-cors'
         }).then(() => {
-            // ALTEN INHALT AUSBLENDEN, NEUES DESIGN ANZEIGEN
             mainContent.style.display = 'none';
             successOverlay.style.display = 'flex';
             window.scrollTo(0, 0);
         }).catch(err => {
-            alert("Fehler beim Senden.");
+            alert("Error sending request.");
             btn.disabled = false;
             btn.innerText = "Abholauftrag verbindlich senden";
         });
